@@ -1,4 +1,4 @@
-# Survey App
+# Anonymous Survey
 
 A simple survey application built with Symfony 8, Vue 3, and TypeScript. The app allows users to register, create surveys, duplicate them, and make them public. Choice-based surveys are always anonymous, but access can be public or protected with a password.
 
