@@ -1,0 +1,91 @@
+name: 'Survey'
+services:
+
+    web:
+        container_name: 'survey_web'
+        image: nginx:alpine-slim
+        volumes:
+            - ./docker/conf/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./app:/var/www/html
+        ports:
+            - '8084:80'
+        restart: always
+        depends_on:
+            - php
+        networks:
+            - sail
+
+    php:
+        container_name: 'survey_php'
+        build:
+            context: ./
+            dockerfile: docker/php.Dockerfile
+        restart: always
+        environment:
+            - XDEBUG_MODE
+        volumes:
+            - ./docker/conf/php/php.ini:/usr/local/etc/php/conf.d/php.ini
+            - ./docker/conf/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+            - ./app:/var/www/html
+            - /tmp/sessions:/tmp/sessions
+            - /tmp/docker-xdebug83:/tmp/docker-xdebug
+        depends_on:
+            - redis
+        networks:
+            - sail
+
+    redis:
+        container_name: 'survey_redis'
+        image: redis:alpine
+        restart: always
+        command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+        volumes:
+            - redis_files:/data
+        networks:
+            - sail
+
+    mysql:
+        image: mariadb
+        container_name: survey_mysql
+        restart: unless-stopped
+        tty: true
+        ports:
+            - 3310:3306
+        environment:
+            MYSQL_DATABASE: laravel
+            MYSQL_USER: user
+            MYSQL_PASSWORD: password
+            MYSQL_ROOT_PASSWORD: password
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        networks:
+            - sail
+
+    node:
+        image: node:20
+        container_name: 'survey_node'
+        volumes:
+            - ./app:/var/www/html/app
+        build:
+            context: ./
+            dockerfile: docker/node.Dockerfile
+        ports:
+            - '5177:5173'
+        depends_on:
+            - web
+        networks:
+            - sail
+
+networks:
+    sail:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 10.126.0.0/16
+                  gateway: 10.126.0.1
+
+volumes:
+    redis_files:
+        driver: local
+    sail-mysql:
+        driver: local
