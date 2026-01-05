@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Anonymous Survey{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+        text-align: center;
+    }
+
+    .welcome-container {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 40px 60px;
+        border-radius: 20px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+    }
+
+    a.button {
+        display: inline-block;
+        padding: 12px 30px;
+        font-size: 1rem;
+        color: #764ba2;
+        background: #fff;
+        border-radius: 50px;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+
+    a.button:hover {
+        background: #f0f0f0;
+        transform: translateY(-3px);
+    }
+</style>
+
+<div class="welcome-container">
+    <h1>Welcome to Anonymous Survey</h1>
+    <p>Join the people who are already creating their anonymous surveys. 🚀</p>
+    <a href="#" class="button">Let's go!</a>
+</div>
+{% endblock %}
