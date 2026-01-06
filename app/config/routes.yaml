@@ -9,3 +9,8 @@
 
 controllers:
     resource: routing.controllers
+spa:
+  path: /{vueRouting}
+  controller: App\Controller\SpaController::index
+  requirements:
+    vueRouting: ".*"

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+    {% block body %}{% endblock %}
+
+    <div
+        id="app"
+        data-props='{{ props|json_encode|e('html_attr') }}'
+    ></div>
+
+    {% if app_env == 'dev' %}
+        <script type="module" src="http://localhost:5173/build/main.ts"></script>
+    {% else %}
+        <script type="module" src="{{ asset('build/main.js') }}"></script>
+    {% endif %}
+</body>
+</html>
