@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import Btn from '../components/Btn.vue';
 import CookiesInfo from '../components/CookiesInfo.vue';
+import Footer from './layout/Footer.vue';
+import PresentationSection from './layout/PresentationSection.vue';
+import TopBar from './layout/TopBar.vue';
 
 </script>
 
@@ -10,15 +12,9 @@ import CookiesInfo from '../components/CookiesInfo.vue';
         These cookies are not used for analytical or marketing purposes and do not require user consent.
     </CookiesInfo>
 
-    <section class="p-2 flex items-center">
-        <div class="flex-1 text-xl">Anonymous Survey</div>
-        <div>
-            <Btn>Login</Btn>        
-            <Btn>Register</Btn>
-        </div>
-    </section>
+    <TopBar />
 
-    <section class="slider flex items-center justify-center m-0 min-h-[600px] text-white">
+    <PresentationSection class="min-h-[600px]">
         <div class="card px-6 py-4 max-w-[800px] rounded-2xl text-center bg-white/10 mx-4">
             <h1 class="p-2 leading-10 text-4xl sm:leading-14">Create surveys and share them anonymously for completion</h1>
             <p class="mb-4 p-4">Join the people who are already creating their anonymous surveys.</p>
@@ -27,10 +23,10 @@ import CookiesInfo from '../components/CookiesInfo.vue';
                 Let's start! 🚀
             </a>
         </div>
-    </section>
+    </PresentationSection>
 
     <section class="p-6 py-20 border-t-2 bg-gray-200">
-        <h2 class="text-2xl mb-16 text-3xl">How it works</h2>
+        <h2 class="mb-16 text-3xl">How it works</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="p-4 bg-green-200 border-b-2 rounded-sm shadow-sm hover:shadow-md transition duration-300">
                 <h3 class="text-xl mb-2 text-green-900">Create an Account</h3>
@@ -58,7 +54,7 @@ import CookiesInfo from '../components/CookiesInfo.vue';
     </section>
 
     <section class="p-6 py-20 border-t-2 bg-white">
-        <h2 class="text-2xl mb-8 text-3xl">View sample surveys</h2>
+        <h2 class="mb-8 text-3xl">View sample surveys</h2>
         <div>
             <div class="p-6 bg-gray-100 rounded-sm shadow-sm hover:shadow-md transition duration-300 mb-4">
                 <h3 class="text-xl mb-2">Sample Survey 1</h3>
@@ -75,23 +71,10 @@ import CookiesInfo from '../components/CookiesInfo.vue';
         </div>
     </section>
 
-    <section class="p-6 py-20 border-t-2 bg-slate-900 text-white">
-        <h2 class="text-2xl mb-8 text-3xl">Built to Showcase Modern Web Development</h2>
-        <p class="mb-2">This platform was created to demonstrate advanced programming capabilities using Symfony 8, Vue 3, TypeScript Tailwind and Docker.</p>
-        <p class="mb-2">It serves as a practical example of a modern, scalable web application — from backend architecture to a responsive, dynamic frontend.</p>
-        <p class="mb-6">The full source code is publicly available on GitHub, where you can explore the implementation details, review best practices, and download the project for your own use.</p>
-        <p class="mb-2">View the source code on GitHub:  <a href="https://github.com/skierzko/Anonymous-Survey" target="_blank" class="text-blue-600 hover:underline">GitHub Repository</a></p>
-    </section>
-
-    <section>
-        <div class="p-6 py-10 bg-gray-800 text-white text-center">
-            <p>&copy; 2026 Sylwester Kierzkowski.</p>
-            <p>Designed and developed by Sylwester Kierzkowski. This project is open for copying, modification, and use for any purpose.</p>
-        </div>
-    </section>
+    <Footer />
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
     .slider {
         font-family: 'Inter', 'Segoe UI', sans-serif;
         background: linear-gradient(270deg, #667eea, #764ba2, #6b8cff);
