@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import CookiesInfo from '../components/CookiesInfo.vue';
-import Footer from './layout/Footer.vue';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
-import PresentationSection from './layout/PresentationSection.vue';
-import TopBar from './layout/TopBar.vue';
 </script>
 
 <template>

@@ -8,6 +8,7 @@ use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -23,7 +24,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register', methods: ['POST'])]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): JsonResponse
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -50,12 +51,29 @@ class RegistrationController extends AbstractController
 
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('spa');
+            return $this->json([
+                'status' => true,
+                'message' => 'Account has been registered.',
+            ]);
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
+        return $this->json([
+            'status' => false,
+            'message' => 'Account has not been registered.',
+            'errors' => $this->getFormErrors($form),
         ]);
+    }
+
+    private function getFormErrors(\Symfony\Component\Form\FormInterface $form): array
+    {
+        $errors = [];
+
+        foreach ($form->getErrors(true, true) as $error) {
+            $formName = $error->getOrigin()->getName();
+            $errors[$formName] = $error->getMessage();
+        }
+
+        return $errors;
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]

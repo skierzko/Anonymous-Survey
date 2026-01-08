@@ -5,7 +5,12 @@ import Btn from '../../components/Btn.vue';
 
 <template>
     <section class="p-2 flex items-center">
-        <div class="flex-1 text-xl">Anonymous Survey</div>
+        <div class="flex-1 text-xl">
+            
+            <RouterLink to="/">
+                <Btn type="text">Anonymous Survey</Btn>
+            </RouterLink>
+        </div>
         <div>
             <RouterLink to="/login">
                 <Btn>Login</Btn>
