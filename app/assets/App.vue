@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { User } from './types/User';
 
 const props = defineProps<{
-    component: string,
-    props: Record<string, any>
+    csrfToken: string,
+    userLogged?: User,
 }>()
 
 const count = ref<number>(0)
@@ -11,18 +12,6 @@ const count = ref<number>(0)
 
 <template>
     <div>
-        <router-view />
+        <router-view v-bind="props" />
     </div>
 </template>
-
-<style scoped>
-.app {
-    font-family: sans-serif;
-    padding: 40px;
-}
-
-button {
-    padding: 8px 16px;
-    font-size: 16px;
-}
-</style>
