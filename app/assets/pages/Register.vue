@@ -3,6 +3,12 @@ import { ref, reactive } from 'vue';
 import Btn from '../components/Btn.vue';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
 import axios from 'axios';
+import { User } from '../types/User';
+
+const props = defineProps<{
+    csrfToken: string,
+    userLogged?: User,
+}>()
 
 interface RegisterForm {
     email: string;
@@ -19,7 +25,7 @@ const form = reactive<RegisterForm>({
 });
 
 const sending = ref<boolean>(false);
-const succesfull = ref<boolean>(false);
+const successful = ref<boolean>(false);
 const errors = ref<[]>([]);
 
 const register = async () => {
@@ -40,7 +46,7 @@ const register = async () => {
     await axios.post('/register', data)
     .then((response) => {
         if (response.data.status) {
-            succesfull.value = true;
+            successful.value = true;
             return;
         }
 
@@ -55,7 +61,7 @@ const register = async () => {
 <template>
     <NoLoginLayout>
         <template v-slot:presentation_section>
-            <div class="card px-6 py-4 max-w-[800px] rounded-2xl text-center mx-4">
+            <div class="px-6 py-4 max-w-[800px] rounded-2xl text-center mx-4">
                 <h1 class="p-2 leading-10 text-4xl sm:leading-14">Register</h1>
             </div>
         </template>
@@ -67,7 +73,18 @@ const register = async () => {
                 </div>
                 
                 <div>
-                    <form v-if="succesfull === false" class="max-w-md mx-auto">
+                     <div v-if="successful" class="text-center">
+                        <p class="mb-4 font-bold text-xl text-green-700">Account created successfully!</p>
+                        <p>Your account has been created, but it is not active yet.</p>
+                        <p>Please check your email inbox and click the activation link to verify your account.</p>
+                        <p class="my-4">If you don’t see the email, make sure to check your spam or junk folder.</p>
+                        <p>
+                            <b>Best regards</b>,
+                            <br />
+                            The Team Anonymous Surveys
+                        </p>
+                    </div>
+                    <form v-else class="max-w-md mx-auto">
                         <div class="mb-4">
                             <label for="email" class="block text-gray-700 mb-2">Email:</label>
                             <input v-model="form.email" type="email" id="email" class="w-full px-3 py-2 border rounded" required>
@@ -87,17 +104,6 @@ const register = async () => {
                             {{ sending ? 'Sending...' : 'Register' }}
                         </Btn>
                     </form>
-                    <div v-else class="text-center">
-                        <p class="mb-4 font-bold text-xl text-green-700">Account created successfully!</p>
-                        <p>Your account has been created, but it is not active yet.</p>
-                        <p>Please check your email inbox and click the activation link to verify your account.</p>
-                        <p class="my-4">If you don’t see the email, make sure to check your spam or junk folder.</p>
-                        <p>
-                            <b>Best regards</b>,
-                            <br />
-                            The Team Anonymous Surveys
-                        </p>
-                    </div>
                 </div>
             </section>
         </template>

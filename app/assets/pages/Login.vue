@@ -1,6 +1,71 @@
 <script setup lang="ts">
+import { ref, reactive } from 'vue';
 import Btn from '../components/Btn.vue';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
+import axios from 'axios';
+import { User } from '../types/User';
+import { useRouter } from 'vue-router'
+
+
+const props = defineProps<{
+    csrfToken: string,
+    userLogged?: User,
+}>()
+
+interface LoginForm {
+    email: string;
+    password: string;
+}
+
+const form = reactive<LoginForm>({
+    email: '',
+    password: '',
+});
+
+const sending = ref<boolean>(false);
+const successful = ref<boolean>(false);
+const errors = ref<[]>([]);
+const router = useRouter()
+
+const login = async () => {
+    if (sending.value) {
+        return;
+    }
+
+    console.log(router);
+
+    errors.value = [];
+    sending.value = true;
+
+    await axios.post(
+        '/login',
+        {
+            email: form.email,
+            password: form.password,
+            _csrf_token: props.csrfToken,
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            withCredentials: true,
+        }
+    )
+    .then((response) => {
+        if (response.data.status === 'ok') {
+            successful.value = true;
+            router.push('/user-board')
+            return;
+        }
+
+        errors.value = response.data.errors;
+    })
+    .finally(() => {
+        sending.value = false;
+    });
+};
+
 </script>
 
 <template>
@@ -18,50 +83,25 @@ import NoLoginLayout from './layout/NoLoginLayout.vue';
                 </div>
 
                 <div>
-                    <form class="max-w-md mx-auto">
+                    <div v-if="successful" class="text-center">
+                        <p class="mb-4 font-bold text-xl text-green-700">Login successfully!</p>
+                        <p>You will be redirected to your user page shortly.</p>
+                    </div>
+                    <form v-else class="max-w-md mx-auto">
                         <div class="mb-4">
                             <label for="email" class="block text-gray-700 mb-2">Email:</label>
-                            <input type="email" id="email" class="w-full px-3 py-2 border rounded" required>
+                            <input v-model="form.email" type="email" id="email" class="w-full px-3 py-2 border rounded" required>
                         </div>
                         <div class="mb-6">
                             <label for="password" class="block text-gray-700 mb-2">Password:</label>
-                            <input type="password" id="password" class="w-full px-3 py-2 border rounded" required>
+                            <input v-model="form.password" type="password" id="password" class="w-full px-3 py-2 border rounded" required>
                         </div>
-                        <Btn type="primary" class="text-">Login</Btn>
+                        <Btn type="primary" @click="login">
+                            {{ sending ? 'Sending...' : 'Login' }}
+                        </Btn>
                     </form>
                 </div>
             </section>
         </template>
     </NoLoginLayout>
 </template>
-
-<style lang="scss" scoped>
-    .slider {
-        font-family: 'Inter', 'Segoe UI', sans-serif;
-        background: linear-gradient(270deg, #667eea, #764ba2, #6b8cff);
-        background-size: 600% 600%;
-        animation: gradientBG 12s ease infinite;
-
-        .card {
-            backdrop-filter: blur(12px);
-            animation: fadeInUp 1s ease forwards;
-
-            @keyframes gradientBG {
-                0% { background-position: 0% 50%; }
-                50% { background-position: 100% 50%; }
-                100% { background-position: 0% 50%; }
-            }
-
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(30px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-        }
-    }
-</style>

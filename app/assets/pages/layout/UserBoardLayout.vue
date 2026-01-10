@@ -3,7 +3,6 @@ import CookiesInfo from '../../components/CookiesInfo.vue';
 import Footer from './Footer.vue';
 import TopBar from './TopBar.vue';
 import PresentationSection from './PresentationSection.vue';
-import { useAuthStore } from '../../stores/auth';
 </script>
 
 <template>
@@ -12,7 +11,7 @@ import { useAuthStore } from '../../stores/auth';
         These cookies are not used for analytical or marketing purposes and do not require user consent.
     </CookiesInfo>
 
-    <TopBar :isLogged="false" />
+    <TopBar isLogged />
 
     <PresentationSection>
         <slot name="presentation_section"></slot>
