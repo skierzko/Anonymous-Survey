@@ -9,10 +9,11 @@
 <body>
     {% block body %}{% endblock %}
 
-    <div
-        id="app"
-        data-props='{{ props|json_encode|e('html_attr') }}'
-    ></div>
+    <div id="app"></div>
+
+    <script>
+        window.__APP_PROPS__ = {{ props|json_encode|raw }};
+    </script>
 
     {% if app_env == 'dev' %}
         <script type="module" src="http://localhost:5173/build/main.ts"></script>
