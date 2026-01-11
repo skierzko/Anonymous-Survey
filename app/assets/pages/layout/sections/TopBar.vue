@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import axios from 'axios';
 import { useRouter } from 'vue-router'
-import Btn from '../../components/Btn.vue';
-import { useAuthStore } from '../../stores/auth';
+import Btn from '../../../components/Btn.vue';
+import { useAuthStore } from '../../../stores/auth';
 
 interface Props {
     isLogged: boolean,

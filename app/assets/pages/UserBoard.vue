@@ -29,10 +29,12 @@ const list = ref<Survey[]>([]);
                     :class="[list.length === 0 && 'items-center']"
                 >
                     <div class="sm:w-[200px]">
-                        <Btn type="success">
-                            <DiamondPlus class="inline-block" />
-                            Add survey
-                        </Btn>
+                        <RouterLink to="/survey-creator">
+                            <Btn type="success">
+                                <DiamondPlus class="inline-block" />
+                                Add survey
+                            </Btn>
+                        </RouterLink>
                     </div>
                     <div class="flex-4">
                         <div v-if="list.length">

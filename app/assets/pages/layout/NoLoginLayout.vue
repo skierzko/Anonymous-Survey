@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import CookiesInfo from '../../components/CookiesInfo.vue';
-import Footer from './Footer.vue';
-import TopBar from './TopBar.vue';
-import PresentationSection from './PresentationSection.vue';
+import Footer from './sections/Footer.vue';
+import TopBar from './sections/TopBar.vue';
+import PresentationSection from './sections/PresentationSection.vue';
 import { useAuthStore } from '../../stores/auth';
 
 const auth = useAuthStore();
