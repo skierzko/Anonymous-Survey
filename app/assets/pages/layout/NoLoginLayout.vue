@@ -1,9 +1,18 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import CookiesInfo from '../../components/CookiesInfo.vue';
 import Footer from './Footer.vue';
 import TopBar from './TopBar.vue';
 import PresentationSection from './PresentationSection.vue';
 import { useAuthStore } from '../../stores/auth';
+
+const auth = useAuthStore();
+
+onMounted(async () => {
+  if (!auth.user && !auth.loading) {
+    await auth.fetchUser()
+  }
+})
 </script>
 
 <template>
@@ -12,7 +21,7 @@ import { useAuthStore } from '../../stores/auth';
         These cookies are not used for analytical or marketing purposes and do not require user consent.
     </CookiesInfo>
 
-    <TopBar :isLogged="false" />
+    <TopBar :isLogged="auth.isAuthenticated" />
 
     <PresentationSection>
         <slot name="presentation_section"></slot>
