@@ -5,6 +5,6 @@ export interface User {
     is_verified: number,
     agreed_terms: number,
     created_at: string,
-    updated_at_at: string,
+    updated_at: string,
     // deleted_at: string,
 }
