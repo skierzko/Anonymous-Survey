@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import Btn from '../../../components/Btn.vue';
 import { useAuthStore } from '../../../stores/auth';
+import { CircleUser, LogOut, UserStar, Form } from 'lucide-vue-next';
 
 interface Props {
     isLogged: boolean,
@@ -31,18 +32,30 @@ const logout =  async () => {
         <div>
             <template v-if="isLogged">
                 <RouterLink to="/user-board">
-                    <Btn>User board</Btn>
+                    <Btn>
+                        User board
+                        <CircleUser :size="22" :stroke-width="1.3" class="inline-block" />
+                    </Btn>
                 </RouterLink>
 
-                <Btn @click="logout">Logout</Btn>
+                <Btn @click="logout">
+                    Logout
+                    <LogOut :size="22" :stroke-width="1.3" class="inline-block" />
+                </Btn>
             </template>
             <template v-else>
                 <RouterLink to="/login">
-                    <Btn>Login</Btn>
+                    <Btn>
+                        Login
+                        <UserStar :size="22" :stroke-width="1.3" class="inline-block" />
+                    </Btn>
                 </RouterLink>
 
                 <RouterLink to="/register">
-                    <Btn>Register</Btn>
+                    <Btn>
+                        Register
+                        <Form :size="22" :stroke-width="1.3" class="inline-block" />
+                    </Btn>
                 </RouterLink>
             </template>
             
