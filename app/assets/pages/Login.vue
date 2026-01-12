@@ -32,8 +32,6 @@ const login = async () => {
         return;
     }
 
-    console.log(router);
-
     errors.value = [];
     sending.value = true;
 
@@ -94,7 +92,7 @@ const login = async () => {
                         </div>
                         <div class="mb-6">
                             <label for="password" class="block text-gray-700 mb-2">Password:</label>
-                            <input v-model="form.password" type="password" id="password" class="w-full px-3 py-2 border rounded" required>
+                            <input v-model="form.password" type="password" id="password" class="w-full px-3 py-2 border rounded" required @keyup.enter="login">
                         </div>
                         <Btn type="primary" @click="login">
                             {{ sending ? 'Sending...' : 'Login' }}

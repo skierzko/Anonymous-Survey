@@ -4,6 +4,12 @@ import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
 import { Survey } from '../types/Survey';
 import { DiamondPlus } from 'lucide-vue-next';
+import { User } from '../types/User';
+
+const props = defineProps<{
+    csrfToken: string,
+    userLogged?: User,
+}>()
 
 const list = ref<Survey[]>([]);
 

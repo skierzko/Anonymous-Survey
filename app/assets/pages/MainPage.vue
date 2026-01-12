@@ -1,5 +1,11 @@
 <script setup lang="ts">
+import { User } from '../types/User';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
+
+const props = defineProps<{
+    csrfToken: string,
+    userLogged?: User,
+}>()
 </script>
 
 <template>
