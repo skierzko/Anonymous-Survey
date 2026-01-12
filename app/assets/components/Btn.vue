@@ -21,7 +21,7 @@ withDefaults(defineProps<Props>(), {
             !disabled && 'active:scale-80',
             type === 'default' && 'bg-gray-200 text-black hover:bg-gray-300',
             type === 'primary' && 'bg-blue-600 text-white hover:bg-blue-700',
-            type === 'danger' && 'bg-red-600 text-white hover:bg-red-700',
+            type === 'danger' && 'bg-red-700 text-white hover:bg-red-800',
             type === 'success' && 'bg-green-600 text-white hover:bg-green-700',
             type === 'warning' && 'bg-yellow-500 text-white hover:bg-yellow-600',
             type === 'info' && 'bg-teal-600 text-white hover:bg-teal-700',
