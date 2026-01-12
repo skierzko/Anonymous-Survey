@@ -16,7 +16,7 @@ const surveyOptions = ref<Question[]>([]);
 const addQuestion = (index: number, type?: string) => {
     surveyOptions.value.splice(index, 0, {
         type: type ?? 'change_query_type',
-        title: 'Change question',
+        title: '',
         visible: true,
         options: [],
     })
@@ -51,7 +51,14 @@ const remove = (index: number): void => {
                         <div class="text-xl mb-4">Options</div>
 
                         <div class="grid grid-cols-1 gap-2">
-                            <Btn type="primary" @click="addQuestion(surveyOptions.length, 'radio_question_survey')">Single choice</Btn>
+                            <template
+                                v-for="(surveyComponent, key) in SURVEY_COMPONENT_MAP"
+                                :key="key"
+                            >
+                                <Btn v-if="surveyComponent.visible" type="primary" @click="addQuestion(surveyOptions.length, key)">{{ surveyComponent.name }}</Btn>
+                            </template>
+
+                            
                             <!-- <Btn type="primary" @click="addQuestion(surveyOptions.length, 'multi-choice')">Multi choice</Btn>
                             <Btn type="primary" @click="addQuestion(surveyOptions.length, 'verbal-response')">Verbal response</Btn>
                             <Btn type="primary" @click="addQuestion(surveyOptions.length, 'dropdown-options')">Dropdown options</Btn>
