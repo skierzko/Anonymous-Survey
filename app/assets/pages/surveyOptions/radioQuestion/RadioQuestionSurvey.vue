@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Question } from '../../../types/Question';
-import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff } from 'lucide-vue-next';
+import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff, CircleDot } from 'lucide-vue-next';
 import Btn from '../../../components/Btn.vue';
 import RadioQuestionSurveyOptions from './RadioQuestionSurveyOptions.vue';
 import Separator from '../../../components/Separator.vue';
@@ -30,8 +30,11 @@ const toggleVisibility = () => {
         class="bg-gray-100 rounded-xs p-2"
         :class="[! question.visible && 'opacity-30']"
     >
-        <div class="flex items-center">
-            <div class="flex-1 text-gray-500 font-bold text-xs">Single choice</div>
+        <div class="flex items-center mb-3">
+            <CircleDot class="mr-2" />
+            <div class="flex-1 text-gray-500 font-bold text-xs">
+                Single choice
+            </div>
             <div>
                 <Btn class="p-1!" :disabled="isFirst" @click="emit('moveUp', index)">
                     <ArrowBigUp :size="20" :stroke-width="1.3" />
