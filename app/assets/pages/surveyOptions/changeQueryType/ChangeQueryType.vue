@@ -38,4 +38,5 @@ const setQuestionType = (type: string) => {
             <Trash2 :size="20" :stroke-width="1.3" />
         </Btn>
     </div>
+    <Separator v-if="isLast" @click="emit('addQuestion', index)" label="Add query here" />
 </template>
