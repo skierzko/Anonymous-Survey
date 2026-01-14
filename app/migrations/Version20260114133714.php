@@ -27,6 +27,7 @@ final class Version20260114133714 extends AbstractMigration
                 name VARCHAR(255) NOT NULL,
                 draft TINYINT(1) NOT NULL,
                 slug VARCHAR(255) NOT NULL,
+                password_required VARCHAR(1) DEFAULT 0,
                 password VARCHAR(255) DEFAULT NULL,
 
                 public_at DATETIME DEFAULT NULL,

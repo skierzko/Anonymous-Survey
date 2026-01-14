@@ -21,11 +21,11 @@ const props = defineProps<{
 const survey = ref<Survey>(createSurvey());
 
 const addQuestion = (index: number, type?: string) => {
-    if (! survey.value.options) {
+    if (! survey.value.questions) {
         return;
     }
 
-    survey.value.options.splice(index, 0, {
+    survey.value.questions.splice(index, 0, {
         type: type ?? 'change_query_type',
         title: '',
         visible: true,
@@ -40,37 +40,38 @@ const addQuestion = (index: number, type?: string) => {
 
 const moveUp = (index: number): void => {
     if (
-        ! survey.value.options ||
+        ! survey.value.questions ||
         index <= 0 ||
-        index >= survey.value.options.length
+        index >= survey.value.questions.length
     ) {
         return;
     }
 
-    survey.value.options.splice(index - 1, 2, survey.value.options[index], survey.value.options[index - 1]);
+    survey.value.questions.splice(index - 1, 2, survey.value.questions[index], survey.value.questions[index - 1]);
 }
 
 const moveDown = (index: number): void => {
     if (
-        ! survey.value.options ||
+        ! survey.value.questions ||
         index < 0 ||
-        index >= survey.value.options.length - 1
+        index >= survey.value.questions.length - 1
     ) {
         return
     }
   
-  survey.value.options.splice(index, 2, survey.value.options[index + 1], survey.value.options[index]);
+  survey.value.questions.splice(index, 2, survey.value.questions[index + 1], survey.value.questions[index]);
 }
 
 const remove = (index: number): void => {
-    if (! survey.value.options ) {
+    if (! survey.value.questions) {
         return;
     }
     
-    survey.value.options.splice(index, 1);
+    survey.value.questions.splice(index, 1);
 }
 
 const save = async () => {
+    console.log(survey.value);
     // await axios.post()
 }
 </script>
@@ -92,11 +93,13 @@ const save = async () => {
                         <div class="grid grid-cols-1 gap-3">
                             <InputText v-model="survey.title" placeholder="Title" />
                             <OnOff v-model="survey.draft" label="Draft" />
+                            <OnOff v-model="survey.password_required" label="Password required" />
+                            <InputText v-if="survey.password_required" v-model="survey.password" placeholder="Password" label="Password:" />
                             <Btn type="success" class="w-full" @click="save">Save</Btn>
                             <Separator class="pt-6" fullVisibility :clickable="false">Details</Separator>
                             <p class="flex gap-2 items-center text-sm text-gray-600">
                                 Created questions:
-                                <Pill>{{ survey.options?.length }}</Pill>
+                                <Pill>{{ survey.questions?.length }}</Pill>
                             </p>
                             <Separator class="pt-6" fullVisibility :clickable="false">Time details</Separator>
                             <p class="text-sm text-gray-600">
@@ -120,13 +123,13 @@ const save = async () => {
                         <div class="text-xl mb-4">Survey questions</div>
 
                         <div class="grid gap-4 grid-cols-1">
-                            <template v-for="(surveyOption, index) in survey.options">
+                            <template v-for="(surveyOption, index) in survey.questions">
                                 <component
                                     :is="SURVEY_COMPONENT_MAP[surveyOption.type].c"
                                     :question="surveyOption"
                                     :index="index"
                                     :is-first="index === 0"
-                                    :is-last="index === (survey.options?.length ?? 0) - 1"
+                                    :is-last="index === (survey.questions?.length ?? 0) - 1"
                                     @move-up="moveUp"
                                     @move-down="moveDown"
                                     @remove="remove"
@@ -136,7 +139,7 @@ const save = async () => {
                         </div>
 
                         <p
-                            v-if="(survey.options?.length ?? 0) === 0"
+                            v-if="(survey.questions?.length ?? 0) === 0"
                             class="flex gap-4 items-center p-4 bg-sky-800 text-white rounded-xs"
                         >
                             <TriangleAlert />

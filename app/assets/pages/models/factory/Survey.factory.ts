@@ -4,11 +4,12 @@ export function createSurvey(): Survey {
   return {
     id: undefined,
     user_id: undefined,
-    name: "",
+    title: "",
     draft: false,
     slug: "",
+    password_required: false,
     password: "",
-    options: [],
+    questions: [],
 
     public_at: "",
     created_at: "",

@@ -25,7 +25,6 @@ public function getDescription(): string
                 survey_question_id INT NOT NULL,
 
                 title VARCHAR(255) NOT NULL,
-                draft TINYINT(1) NOT NULL,
                 visible TINYINT(1) NOT NULL,
 
                 created_at DATETIME NOT NULL,

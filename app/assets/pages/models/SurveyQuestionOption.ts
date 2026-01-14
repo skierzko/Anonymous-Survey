@@ -3,7 +3,6 @@ export interface SurveyQuestionOption {
     survey_question_id?:number,
 
     title: string,
-    draft: boolean,
     visible: boolean,
 
     created_at?: string,

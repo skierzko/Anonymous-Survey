@@ -7,8 +7,9 @@ export interface Survey {
     title: string,
     draft: boolean,
     slug: string,
+    password_required: boolean,
     password: string,
-    options?: SurveyQuestion[],
+    questions?: SurveyQuestion[],
 
     public_at: string,
     created_at: string,

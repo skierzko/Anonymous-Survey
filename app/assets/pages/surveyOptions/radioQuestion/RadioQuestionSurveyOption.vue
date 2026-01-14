@@ -27,7 +27,12 @@ const toggleVisibility = () => {
 <template>
     <Separator class="w-2/3" @click="emit('addOption', index)" />
     <div class="flex gap-1 items-center">
-        <InputText v-model="option.title" class="w-2/3 rounded-xs" placeholder="Enter one of the answers" />
+        <InputText
+            v-model="option.title"
+            class="w-2/3 rounded-xs"
+            :class="[! option.visible && 'opacity-60']"
+            placeholder="Enter one of the answers"
+        />
         <Btn class="p-1!" :disabled="isFirst" @click="! isFirst && emit('moveUp', index)">
             <ArrowBigUp :size="20" :stroke-width="1.3" />
         </Btn>
