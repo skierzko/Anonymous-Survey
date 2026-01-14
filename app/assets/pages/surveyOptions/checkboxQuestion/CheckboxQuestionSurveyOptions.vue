@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { QuestionOption } from '../../../types/QuestionOption';
+import { SurveyQuestionOption } from '../../models/SurveyQuestionOption';
 import { CirclePlus } from 'lucide-vue-next';
 import CheckboxQuestionSurveyOption from './CheckboxQuestionSurveyOption.vue';
 import Btn from '../../../components/Btn.vue';
 
 const props = defineProps<{
-    options: QuestionOption[],
+    options: SurveyQuestionOption[],
 }>()
 
 const addOption = (index: number) => {

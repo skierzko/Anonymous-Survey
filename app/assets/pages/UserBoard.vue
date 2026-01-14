@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
-import { Survey } from '../types/Survey';
+import { Survey } from './models/Survey';
 import { DiamondPlus } from 'lucide-vue-next';
 import { User } from '../types/User';
 

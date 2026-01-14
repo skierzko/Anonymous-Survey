@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Question } from '../../../types/Question';
+import { SurveyQuestion } from '../../models/SurveyQuestion';
 import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff, SquareStack } from 'lucide-vue-next';
 import Btn from '../../../components/Btn.vue';
 import CheckboxQuestionSurveyOptions from './CheckboxQuestionSurveyOptions.vue';
@@ -9,7 +9,7 @@ import InputNumber from '../../../components/InputNumber.vue';
 import OnOff from '../../../components/OnOff.vue';
 
 const props = defineProps<{
-    question: Question,
+    question: SurveyQuestion,
     index: number,
     isFirst: boolean,
     isLast: boolean,

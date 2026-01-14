@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import axios from 'axios';
 import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
-import { Question } from '../types/Question';
 import { User } from '../types/User';
 import { SURVEY_COMPONENT_MAP } from '../types/SurveyComponentMap';
 import { TriangleAlert } from 'lucide-vue-next';
@@ -10,22 +10,22 @@ import InputText from '../components/InputText.vue';
 import OnOff from '../components/OnOff.vue';
 import Pill from '../components/Pill.vue';
 import Separator from '../components/Separator.vue';
+import { Survey } from './models/Survey';
+import { createSurvey } from './models/factory/Survey.factory';
 
 const props = defineProps<{
     csrfToken: string,
     userLogged?: User,
 }>()
 
-const surveyOptions = ref<Question[]>([]);
-const surveyDetails = ref({
-    title: '',
-    draft: false,
-    created_at: '2025-01-14 08:00',
-    updated_at: '2025-01-14 10:11',
-});
+const survey = ref<Survey>(createSurvey());
 
 const addQuestion = (index: number, type?: string) => {
-    surveyOptions.value.splice(index, 0, {
+    if (! survey.value.options) {
+        return;
+    }
+
+    survey.value.options.splice(index, 0, {
         type: type ?? 'change_query_type',
         title: '',
         visible: true,
@@ -38,17 +38,39 @@ const addQuestion = (index: number, type?: string) => {
 };
 
 const moveUp = (index: number): void => {
-  if (index <= 0 || index >= surveyOptions.value.length) return
-  surveyOptions.value.splice(index - 1, 2, surveyOptions.value[index], surveyOptions.value[index - 1]);
+    if (
+        ! survey.value.options ||
+        index <= 0 ||
+        index >= survey.value.options.length
+    ) {
+        return;
+    }
+
+    survey.value.options.splice(index - 1, 2, survey.value.options[index], survey.value.options[index - 1]);
 }
 
 const moveDown = (index: number): void => {
-  if (index < 0 || index >= surveyOptions.value.length - 1) return
-  surveyOptions.value.splice(index, 2, surveyOptions.value[index + 1], surveyOptions.value[index]);
+    if (
+        ! survey.value.options ||
+        index < 0 ||
+        index >= survey.value.options.length - 1
+    ) {
+        return
+    }
+  
+  survey.value.options.splice(index, 2, survey.value.options[index + 1], survey.value.options[index]);
 }
 
 const remove = (index: number): void => {
-    surveyOptions.value.splice(index, 1);
+    if (! survey.value.options ) {
+        return;
+    }
+    
+    survey.value.options.splice(index, 1);
+}
+
+const save = async () => {
+    // await axios.post()
 }
 </script>
 
@@ -63,25 +85,26 @@ const remove = (index: number): void => {
             <section class="p-6 py-20 border-t-2 bg-gray-200">
                 <div class="md:flex gap-4">
                     <div>
-                        <div class="text-xl mb-4">Options</div>
+                        <div class="sticky top-1">
+                            <div class="text-xl mb-4">Options</div>
 
                         <div class="grid grid-cols-1 gap-3">
-                            <InputText v-model="surveyDetails.title" placeholder="Title" />
-                            <OnOff v-model="surveyDetails.draft" label="Draft" />
-                            <Btn type="success" class="w-full">Save</Btn>
+                            <InputText v-model="survey.title" placeholder="Title" />
+                            <OnOff v-model="survey.draft" label="Draft" />
+                            <Btn type="success" class="w-full" @click="save">Save</Btn>
                             <Separator class="pt-6" fullVisibility :clickable="false">Details</Separator>
                             <p class="flex gap-2 items-center text-sm text-gray-600">
                                 Created questions:
-                                <Pill>{{ surveyOptions.length }}</Pill>
+                                <Pill>{{ survey.options?.length }}</Pill>
                             </p>
                             <Separator class="pt-6" fullVisibility :clickable="false">Time details</Separator>
                             <p class="text-sm text-gray-600">
                                 First save:
-                                {{ surveyDetails.created_at }}
+                                {{ survey.created_at }}
                             </p>
                             <p class="text-sm text-gray-600">
                                 Last save:
-                                {{ surveyDetails.updated_at }}
+                                {{ survey.updated_at }}
                             </p>
                             
                             <!-- 
@@ -90,18 +113,19 @@ const remove = (index: number): void => {
                             <Btn type="primary" @click="addQuestion(surveyOptions.length, 'linear-scale')">Linear scale</Btn>
                             <Btn type="primary" @click="addQuestion(surveyOptions.length, 'date-choice')">Date choice</Btn> -->
                         </div>
+                        </div>
                     </div>
                     <div class="flex-1 mt-16 md:mt-0">
                         <div class="text-xl mb-4">Survey questions</div>
 
                         <div class="grid gap-4 grid-cols-1">
-                            <template v-for="(surveyOption, index) in surveyOptions">
+                            <template v-for="(surveyOption, index) in survey.options">
                                 <component
                                     :is="SURVEY_COMPONENT_MAP[surveyOption.type].c"
                                     :question="surveyOption"
                                     :index="index"
                                     :is-first="index === 0"
-                                    :is-last="index === surveyOptions.length - 1"
+                                    :is-last="index === (survey.options?.length ?? 0) - 1"
                                     @move-up="moveUp"
                                     @move-down="moveDown"
                                     @remove="remove"
@@ -111,7 +135,7 @@ const remove = (index: number): void => {
                         </div>
 
                         <p
-                            v-if="surveyOptions.length === 0"
+                            v-if="(survey.options?.length ?? 0) === 0"
                             class="flex gap-4 items-center p-4 bg-sky-800 text-white rounded-xs"
                         >
                             <TriangleAlert />

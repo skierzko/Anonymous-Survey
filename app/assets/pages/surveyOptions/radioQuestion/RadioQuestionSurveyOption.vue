@@ -2,11 +2,11 @@
 import Btn from '../../../components/Btn.vue';
 import InputText from '../../../components/InputText.vue';
 import Separator from '../../../components/Separator.vue';
-import { QuestionOption } from '../../../types/QuestionOption';
+import { SurveyQuestionOption } from '../../models/SurveyQuestionOption';
 import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff } from 'lucide-vue-next';
 
 const props = defineProps<{
-    option: QuestionOption,
+    option: SurveyQuestionOption,
     index: number,
     isFirst: boolean,
     isLast: boolean,

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { SURVEY_COMPONENT_MAP } from '../../../types/SurveyComponentMap';
-import { Question } from '../../../types/Question';
+import { SurveyQuestion } from '../../models/SurveyQuestion';
 import { Trash2 } from 'lucide-vue-next';
 import Separator from '../../../components/Separator.vue';
 import Btn from '../../../components/Btn.vue';
 
 const props = defineProps<{
-    question: Question,
+    question: SurveyQuestion,
     index: number,
     isFirst: boolean,
     isLast: boolean,

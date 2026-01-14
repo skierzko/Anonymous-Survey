@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Question } from '../../../types/Question';
+import { SurveyQuestion } from '../../models/SurveyQuestion';
 import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff, CircleDot } from 'lucide-vue-next';
 import Btn from '../../../components/Btn.vue';
 import RadioQuestionSurveyOptions from './RadioQuestionSurveyOptions.vue';
@@ -8,7 +8,7 @@ import InputText from '../../../components/InputText.vue';
 import OnOff from '../../../components/OnOff.vue';
 
 const props = defineProps<{
-    question: Question,
+    question: SurveyQuestion,
     index: number,
     isFirst: boolean,
     isLast: boolean,
