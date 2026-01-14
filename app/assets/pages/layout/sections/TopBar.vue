@@ -29,7 +29,7 @@ const logout =  async () => {
                 <Btn type="text">Anonymous Survey</Btn>
             </RouterLink>
         </div>
-        <div>
+        <div class="grid grid-cols-2 gap-1">
             <template v-if="isLogged">
                 <RouterLink to="/user-board">
                     <Btn>
