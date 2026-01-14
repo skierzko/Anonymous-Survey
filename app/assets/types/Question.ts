@@ -5,4 +5,8 @@ export interface Question {
     title: string,
     visible: boolean,
     options: QuestionOption[],
+    minOptionsLimit: number,
+    maxOptionsLimit: number,
+    draft: boolean,
+    optional: boolean,
 }

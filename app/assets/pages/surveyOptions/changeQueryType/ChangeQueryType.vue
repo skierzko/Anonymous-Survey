@@ -24,7 +24,7 @@ const setQuestionType = (type: string) => {
 
 <template>
     <Separator @click="emit('addQuestion', index)" label="Add query here" />
-    <div class="flex p-2 bg-gray-100 rounded-xs items-center">
+    <div class="flex gap-1 p-2 bg-gray-100 rounded-xs items-center">
         <div>Select type: </div>
         <template
             v-for="(surveyComponent, key) in SURVEY_COMPONENT_MAP"

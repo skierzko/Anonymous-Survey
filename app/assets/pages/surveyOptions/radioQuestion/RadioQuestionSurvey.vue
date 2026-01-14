@@ -4,6 +4,8 @@ import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff, CircleDot } from 'lucide
 import Btn from '../../../components/Btn.vue';
 import RadioQuestionSurveyOptions from './RadioQuestionSurveyOptions.vue';
 import Separator from '../../../components/Separator.vue';
+import InputText from '../../../components/InputText.vue';
+import OnOff from '../../../components/OnOff.vue';
 
 const props = defineProps<{
     question: Question,
@@ -30,7 +32,7 @@ const toggleVisibility = () => {
         class="bg-gray-100 rounded-xs p-2"
         :class="[! question.visible && 'opacity-30']"
     >
-        <div class="flex items-center mb-3">
+        <div class="flex gap-1 items-center mb-3">
             <CircleDot class="mr-2" />
             <div class="flex-1 text-gray-500 font-bold text-xs">
                 Single choice
@@ -57,9 +59,15 @@ const toggleVisibility = () => {
                 </Btn>
             </div>
         </div>
-        <div>
-            <label class="w-full block text-sm font-bold text-gray-600">Title:</label>
-            <input v-model="question.title" class="border w-3/4 p-1 rounded-xs" />
+        <div class="grid gap-2 p-2">
+            <InputText
+                v-model="question.title"
+                class="w-3/4 p-1 rounded-xs"
+                placeholder="Enter your question"
+                label="Title:"
+            />
+
+            <OnOff v-model="question.draft" label="Check as draft" />
 
             <RadioQuestionSurveyOptions :options="question.options" />
         </div>

@@ -5,6 +5,11 @@ import UserBoardLayout from './layout/UserBoardLayout.vue';
 import { Question } from '../types/Question';
 import { User } from '../types/User';
 import { SURVEY_COMPONENT_MAP } from '../types/SurveyComponentMap';
+import { TriangleAlert } from 'lucide-vue-next';
+import InputText from '../components/InputText.vue';
+import OnOff from '../components/OnOff.vue';
+import Pill from '../components/Pill.vue';
+import Separator from '../components/Separator.vue';
 
 const props = defineProps<{
     csrfToken: string,
@@ -12,6 +17,12 @@ const props = defineProps<{
 }>()
 
 const surveyOptions = ref<Question[]>([]);
+const surveyDetails = ref({
+    title: '',
+    draft: false,
+    created_at: '2025-01-14 08:00',
+    updated_at: '2025-01-14 10:11',
+});
 
 const addQuestion = (index: number, type?: string) => {
     surveyOptions.value.splice(index, 0, {
@@ -19,6 +30,10 @@ const addQuestion = (index: number, type?: string) => {
         title: '',
         visible: true,
         options: [],
+        minOptionsLimit: 1,
+        maxOptionsLimit: 1,
+        draft: false,
+        optional: false,
     })
 };
 
@@ -50,16 +65,26 @@ const remove = (index: number): void => {
                     <div>
                         <div class="text-xl mb-4">Options</div>
 
-                        <div class="grid grid-cols-1 gap-2">
-                            <template
-                                v-for="(surveyComponent, key) in SURVEY_COMPONENT_MAP"
-                                :key="key"
-                            >
-                                <Btn v-if="surveyComponent.visible" type="primary" @click="addQuestion(surveyOptions.length, key)">{{ surveyComponent.name }}</Btn>
-                            </template>
-
+                        <div class="grid grid-cols-1 gap-3">
+                            <InputText v-model="surveyDetails.title" placeholder="Title..." />
+                            <OnOff v-model="surveyDetails.draft" label="Draft" />
+                            <Btn type="success" class="w-full">Save</Btn>
+                            <Separator class="pt-6" fullVisibility :clickable="false">Details</Separator>
+                            <p class="text-sm text-gray-600">
+                                Created questions:
+                                <Pill>{{ surveyOptions.length }}</Pill>
+                            </p>
+                            <Separator class="pt-6" fullVisibility :clickable="false">Time details</Separator>
+                            <p class="text-sm text-gray-600">
+                                First save:
+                                {{ surveyDetails.created_at }}
+                            </p>
+                            <p class="text-sm text-gray-600">
+                                Last save:
+                                {{ surveyDetails.updated_at }}
+                            </p>
                             
-                            <!-- <Btn type="primary" @click="addQuestion(surveyOptions.length, 'multi-choice')">Multi choice</Btn>
+                            <!-- 
                             <Btn type="primary" @click="addQuestion(surveyOptions.length, 'verbal-response')">Verbal response</Btn>
                             <Btn type="primary" @click="addQuestion(surveyOptions.length, 'dropdown-options')">Dropdown options</Btn>
                             <Btn type="primary" @click="addQuestion(surveyOptions.length, 'linear-scale')">Linear scale</Btn>
@@ -85,7 +110,14 @@ const remove = (index: number): void => {
                             </template>
                         </div>
 
-                        <p v-if="surveyOptions.length === 0">Add first question</p>
+                        <p
+                            v-if="surveyOptions.length === 0"
+                            class="flex gap-4 items-center p-4 bg-sky-800 text-white rounded-xs"
+                        >
+                            <TriangleAlert />
+                            Create the first question by clicking on the button on the right.
+                            <Btn @click="addQuestion(0)">Create question</Btn>
+                        </p>
                     </div>
                 </div>
             </section>
