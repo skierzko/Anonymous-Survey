@@ -61,16 +61,16 @@ const remove = (index: number): void => {
         </template>
         <template v-slot:default>
             <section class="p-6 py-20 border-t-2 bg-gray-200">
-                <div class="flex gap-4">
+                <div class="md:flex gap-4">
                     <div>
                         <div class="text-xl mb-4">Options</div>
 
                         <div class="grid grid-cols-1 gap-3">
-                            <InputText v-model="surveyDetails.title" placeholder="Title..." />
+                            <InputText v-model="surveyDetails.title" placeholder="Title" />
                             <OnOff v-model="surveyDetails.draft" label="Draft" />
                             <Btn type="success" class="w-full">Save</Btn>
                             <Separator class="pt-6" fullVisibility :clickable="false">Details</Separator>
-                            <p class="text-sm text-gray-600">
+                            <p class="flex gap-2 items-center text-sm text-gray-600">
                                 Created questions:
                                 <Pill>{{ surveyOptions.length }}</Pill>
                             </p>
@@ -91,7 +91,7 @@ const remove = (index: number): void => {
                             <Btn type="primary" @click="addQuestion(surveyOptions.length, 'date-choice')">Date choice</Btn> -->
                         </div>
                     </div>
-                    <div class="flex-1">
+                    <div class="flex-1 mt-16 md:mt-0">
                         <div class="text-xl mb-4">Survey questions</div>
 
                         <div class="grid gap-4 grid-cols-1">

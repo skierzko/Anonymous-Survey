@@ -72,10 +72,14 @@ const toggleVisibility = () => {
                 <InputNumber
                     v-model="question.minOptionsLimit"
                     label="Min. selected options"
-                    />
+                    :min="0"
+                    :max="30"
+                />
                 <InputNumber
                     v-model="question.maxOptionsLimit"
                     label="Max. selected options"
+                    :min="0"
+                    :max="30"
                 />
             </div>
 
