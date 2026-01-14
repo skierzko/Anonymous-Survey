@@ -67,7 +67,6 @@ const toggleVisibility = () => {
                 placeholder="Enter your question"
                 label="Title:"
             />
-
             <div class="flex gap-2">
                 <InputNumber
                     v-model="question.minOptionsLimit"
@@ -82,10 +81,8 @@ const toggleVisibility = () => {
                     :max="30"
                 />
             </div>
-
-            <OnOff v-model="question.draft" label="Check as draft" />
-
-
+            <OnOff v-model="question.draft" label="Mark as draft" />
+            <OnOff v-model="question.required" label="Response is required" />
             <CheckboxQuestionSurveyOptions :options="question.options" />
         </div>
     </div>

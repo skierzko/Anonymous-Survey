@@ -33,6 +33,7 @@ const addQuestion = (index: number, type?: string) => {
         minOptionsLimit: 1,
         maxOptionsLimit: 1,
         draft: false,
+        required: true,
         optional: false,
     })
 };

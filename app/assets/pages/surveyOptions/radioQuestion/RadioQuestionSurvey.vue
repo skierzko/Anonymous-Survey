@@ -66,9 +66,8 @@ const toggleVisibility = () => {
                 placeholder="Enter your question"
                 label="Title:"
             />
-
-            <OnOff v-model="question.draft" label="Check as draft" />
-
+            <OnOff v-model="question.draft" label="Mark as draft" />
+            <OnOff v-model="question.required" label="Response is required" />
             <RadioQuestionSurveyOptions :options="question.options" />
         </div>
     </div>

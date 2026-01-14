@@ -10,6 +10,7 @@ export interface SurveyQuestion {
     minOptionsLimit: number,
     maxOptionsLimit: number,
     draft: boolean,
+    required: boolean,
     optional: boolean,
 
     options: SurveyQuestionOption[],

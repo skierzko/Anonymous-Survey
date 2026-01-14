@@ -30,6 +30,7 @@ final class Version20260114134036 extends AbstractMigration
                 min_options_limit INT NOT NULL,
                 max_options_limit INT NOT NULL,
                 draft TINYINT(1) NOT NULL,
+                required TINYINT(1) NOT NULL,
                 optional TINYINT(1) NOT NULL,
 
                 created_at DATETIME NOT NULL,
