@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ref, provide, inject, onMounted, onUnmounted } from 'vue';
+import type { SurveyOptionRegistry, SurveyOptionHandle } from '../../registers/SurveyOptionRegistry'; 
+import type { SurveyQuestionRegistry, SurveyQuestionHandle } from '../../registers/SurveyQuestionRegistry'; 
 import { SurveyQuestion } from '../../models/SurveyQuestion';
 import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff, CircleDot } from 'lucide-vue-next';
 import Btn from '../../../components/Btn.vue';
@@ -6,6 +9,7 @@ import RadioQuestionSurveyOptions from './RadioQuestionSurveyOptions.vue';
 import Separator from '../../../components/Separator.vue';
 import InputText from '../../../components/InputText.vue';
 import OnOff from '../../../components/OnOff.vue';
+import { SurveyQuestionOption } from '../../models/SurveyQuestionOption';
 
 const props = defineProps<{
     question: SurveyQuestion,
@@ -20,6 +24,86 @@ const emit = defineEmits<{
     (e: 'addQuestion', index: number): void,
     (e: 'remove', index: number): void,
 }>();
+
+/** Validation */
+
+const errors = ref<{
+    title?: boolean,
+    options?: boolean,
+    optionsEmpty?: boolean,
+}>();
+
+const valid = (): boolean => {
+    errors.value = {
+        title: isTitleError(),
+        options: isOptionsError(),
+        optionsEmpty: isOptionsEmptyError(),
+    };
+
+    validateAllOptions();
+
+    return Object.values(errors.value).every(value => value === false);
+}
+
+const isTitleError = (): boolean => {
+    return props.question.title.trim().length === 0;
+}
+
+const isOptionsError = (): boolean => {
+    return props.question.options.filter((option: SurveyQuestionOption) => {
+        return option.title.trim().length === 0
+    }).length > 0;
+}
+
+const isOptionsEmptyError = (): boolean => {
+    return props.question.options.length === 0;
+}
+
+function validateAllOptions(): boolean {
+    let isValid = true
+    for (const h of surveyOptionsHandles) {
+        if (!h.valid()) {
+            isValid = false
+        }
+    }
+    return isValid;
+}
+
+/** Registry to parent */
+
+const surveyQuestionRegistry = inject<SurveyQuestionRegistry>('survey-question-registry')
+if (!surveyQuestionRegistry) {
+  throw new Error('survey-question-registry not provided')
+}
+
+const surveyQuestionHandle: SurveyQuestionHandle = { valid }
+
+onMounted(() => {
+  surveyQuestionRegistry.register(surveyQuestionHandle)
+})
+
+onUnmounted(() => {
+  surveyQuestionRegistry.unregister(surveyQuestionHandle)
+})
+
+/** Registry from children */
+
+const surveyOptionsHandles: SurveyOptionHandle[] = [];
+const surveyOptionsRegisters: SurveyOptionRegistry = {
+    register(handle) {
+        surveyOptionsHandles.push(handle)
+    },
+    unregister(handle) {
+        const index = surveyOptionsHandles.indexOf(handle)
+        if (index !== -1) {
+            surveyOptionsHandles.splice(index, 1)
+        }
+    },
+}
+
+provide('survey-option-registry', surveyOptionsRegisters)
+
+/** Other */
 
 const toggleVisibility = () => {
     props.question.visible = !props.question.visible;
@@ -65,11 +149,13 @@ const toggleVisibility = () => {
                 class="w-3/4 p-1 rounded-xs"
                 placeholder="Enter your question"
                 label="Title:"
+                :error="errors?.title ? 'The field cannot remain empty' : ''"
             />
             <OnOff v-model="question.draft" label="Mark as draft" />
             <OnOff v-model="question.required" label="Response is required" />
+            <div v-if="errors?.optionsEmpty" class="px-4 pt-4 text-xs text-red-500">The list of answers cannot be empty</div>
             <RadioQuestionSurveyOptions :options="question.options" />
         </div>
     </div>
-    <Separator v-if="isLast" label="Add query here" @click="emit('addQuestion', index + 1)"  />
+    <Separator v-if="isLast" label="Add query here" @click="emit('addQuestion', index + 1)" />
 </template>

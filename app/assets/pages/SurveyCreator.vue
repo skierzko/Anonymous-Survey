@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, provide } from 'vue';
 import axios from 'axios';
 import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
@@ -12,6 +12,7 @@ import Pill from '../components/Pill.vue';
 import Separator from '../components/Separator.vue';
 import { Survey } from './models/Survey';
 import { createSurvey } from './models/factory/Survey.factory';
+import type { SurveyQuestionHandle, SurveyQuestionRegistry } from './registers/SurveyQuestionRegistry';
 
 const props = defineProps<{
     csrfToken: string,
@@ -74,6 +75,36 @@ const save = async () => {
     console.log(survey.value);
     // await axios.post()
 }
+
+const surveyQuestionsHandles: SurveyQuestionHandle[] = [];
+const surveyQuestionRegisters: SurveyQuestionRegistry = {
+    register(handle) {
+        surveyQuestionsHandles.push(handle)
+    },
+    unregister(handle) {
+        const index = surveyQuestionsHandles.indexOf(handle)
+        if (index !== -1) {
+            surveyQuestionsHandles.splice(index, 1)
+        }
+    },
+}
+
+provide('survey-question-registry', surveyQuestionRegisters)
+
+const isReadyToSave = ref<boolean>(false);
+
+function validateAllQuestions(): boolean {
+    let isValid = true
+    for (const h of surveyQuestionsHandles) {
+        if (!h.valid()) {
+            isValid = false
+        }
+    }
+
+    isReadyToSave.value = isValid;
+
+    return isValid;
+}
 </script>
 
 <template>
@@ -90,40 +121,46 @@ const save = async () => {
                         <div class="sticky top-1">
                             <div class="text-xl mb-4">Options</div>
 
-                        <div class="grid grid-cols-1 gap-3">
-                            <InputText v-model="survey.title" placeholder="Title" />
-                            <OnOff v-model="survey.draft" label="Draft" />
-                            <OnOff v-model="survey.password_required" label="Password required" />
-                            <InputText v-if="survey.password_required" v-model="survey.password" placeholder="Password" label="Password:" />
-                            <Btn type="success" class="w-full" @click="save">Save</Btn>
-                            <Separator class="pt-6" fullVisibility :clickable="false">Details</Separator>
-                            <p class="flex gap-2 items-center text-sm text-gray-600">
-                                Created questions:
-                                <Pill>{{ survey.questions?.length }}</Pill>
-                            </p>
-                            <Separator class="pt-6" fullVisibility :clickable="false">Time details</Separator>
-                            <p class="text-sm text-gray-600">
-                                First save:
-                                {{ survey.created_at }}
-                            </p>
-                            <p class="text-sm text-gray-600">
-                                Last save:
-                                {{ survey.updated_at }}
-                            </p>
-                            
-                            <!-- 
-                            <Btn type="primary" @click="addQuestion(surveyOptions.length, 'verbal-response')">Verbal response</Btn>
-                            <Btn type="primary" @click="addQuestion(surveyOptions.length, 'dropdown-options')">Dropdown options</Btn>
-                            <Btn type="primary" @click="addQuestion(surveyOptions.length, 'linear-scale')">Linear scale</Btn>
-                            <Btn type="primary" @click="addQuestion(surveyOptions.length, 'date-choice')">Date choice</Btn> -->
-                        </div>
+                            <div class="grid grid-cols-1 gap-3">
+                                <InputText v-model="survey.title" placeholder="Title" />
+                                <OnOff v-model="survey.draft" label="Draft" />
+                                <OnOff v-model="survey.password_required" label="Password required" />
+                                <InputText v-if="survey.password_required" v-model="survey.password" placeholder="Password" label="Password:" />
+                                <Btn type="dark" @click="validateAllQuestions">
+                                    <div class="flex items-center">
+                                        <div class="flex-1">Check the form</div>
+                                        <div class="text-xs">{{ isReadyToSave ? 'PASSED' : 'REJECTED' }}</div>
+                                    </div>
+                                </Btn>
+                                <Btn type="success" class="w-full" @click="save">Save</Btn>
+                                <Separator class="pt-6" fullVisibility :clickable="false">Details</Separator>
+                                <p class="flex gap-2 items-center text-sm text-gray-600">
+                                    Created questions:
+                                    <Pill>{{ survey.questions?.length }}</Pill>
+                                </p>
+                                <Separator class="pt-6" fullVisibility :clickable="false">Time details</Separator>
+                                <p class="text-sm text-gray-600">
+                                    First save:
+                                    {{ survey.created_at }}
+                                </p>
+                                <p class="text-sm text-gray-600">
+                                    Last save:
+                                    {{ survey.updated_at }}
+                                </p>
+                                
+                                <!-- 
+                                <Btn type="primary" @click="addQuestion(surveyOptions.length, 'verbal-response')">Verbal response</Btn>
+                                <Btn type="primary" @click="addQuestion(surveyOptions.length, 'dropdown-options')">Dropdown options</Btn>
+                                <Btn type="primary" @click="addQuestion(surveyOptions.length, 'linear-scale')">Linear scale</Btn>
+                                <Btn type="primary" @click="addQuestion(surveyOptions.length, 'date-choice')">Date choice</Btn> -->
+                            </div>
                         </div>
                     </div>
                     <div class="flex-1 mt-16 md:mt-0">
                         <div class="text-xl mb-4">Survey questions</div>
 
                         <div class="grid gap-4 grid-cols-1">
-                            <template v-for="(surveyOption, index) in survey.questions">
+                            <template v-for="(surveyOption, index) in survey.questions" :key="'query-' + index">
                                 <component
                                     :is="SURVEY_COMPONENT_MAP[surveyOption.type].c"
                                     :question="surveyOption"

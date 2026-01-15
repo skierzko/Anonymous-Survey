@@ -33,7 +33,6 @@ const remove = (index: number): void => {
 
 <template>
     <div class="p-4">
-
         <div class="grid grid-cols-1 gap-1">
             <CheckboxQuestionSurveyOption
                 v-for="(option, index) in options"

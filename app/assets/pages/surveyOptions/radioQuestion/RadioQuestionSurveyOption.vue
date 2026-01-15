@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref, inject, onMounted, onUnmounted } from 'vue';
+import type { SurveyOptionRegistry, SurveyOptionHandle } from '../../registers/SurveyOptionRegistry'; 
 import Btn from '../../../components/Btn.vue';
 import InputText from '../../../components/InputText.vue';
 import Separator from '../../../components/Separator.vue';
@@ -12,6 +14,14 @@ const props = defineProps<{
     isLast: boolean,
 }>()
 
+const registry = inject<SurveyOptionRegistry>('survey-option-registry')
+if (!registry) {
+  throw new Error('survey-option-registry not provided')
+}
+
+const error = ref<boolean>(false);
+const errorMessage = ref<string>('');
+
 const emit = defineEmits<{
     (e: 'moveUp', index: number): void,
     (e: 'moveDown', index: number): void,
@@ -22,6 +32,22 @@ const emit = defineEmits<{
 const toggleVisibility = () => {
     props.option.visible = !props.option.visible;
 }
+
+const valid = (): boolean => {
+    const isError = props.option.title.trim().length === 0;
+    errorMessage.value = isError ? 'The field cannot remain empty' : '';
+    return error.value;
+}
+
+const handle: SurveyOptionHandle = { valid }
+
+onMounted(() => {
+  registry.register(handle)
+})
+
+onUnmounted(() => {
+  registry.unregister(handle)
+})
 </script>
 
 <template>
@@ -32,6 +58,7 @@ const toggleVisibility = () => {
             class="w-2/3 rounded-xs"
             :class="[! option.visible && 'opacity-60']"
             placeholder="Enter one of the answers"
+            :error="errorMessage"
         />
         <Btn class="p-1!" :disabled="isFirst" @click="! isFirst && emit('moveUp', index)">
             <ArrowBigUp :size="20" :stroke-width="1.3" />
