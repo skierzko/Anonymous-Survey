@@ -2,17 +2,18 @@ import { SurveyQuestion } from "./SurveyQuestion";
 
 export interface Survey {
     id?: number,
-    user_id?: number,
+    userId?: number,
 
     title: string,
     draft: boolean,
     slug: string,
-    password_required: boolean,
+    passwordRequired: boolean,
     password: string,
     questions?: SurveyQuestion[],
+    extraOptions: Record<string, boolean | string | number>,
 
-    public_at: string,
-    created_at: string,
-    updated_at: string,
-    deleted_at: string,
+    publicAt: string,
+    createdAt: string,
+    updatedAt: string,
+    deletedAt: string,
 }

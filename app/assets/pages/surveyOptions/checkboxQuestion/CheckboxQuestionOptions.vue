@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { SurveyQuestionOption } from '../../models/SurveyQuestionOption';
 import { CirclePlus } from 'lucide-vue-next';
-import RadioQuestionSurveyOption from './RadioQuestionSurveyOption.vue';
+import CheckboxQuestionOption from './CheckboxQuestionOption.vue';
 import Btn from '../../../components/Btn.vue';
 
 const props = defineProps<{
@@ -33,9 +33,8 @@ const remove = (index: number): void => {
 
 <template>
     <div class="p-4">
-
         <div class="grid grid-cols-1 gap-1">
-            <RadioQuestionSurveyOption
+            <CheckboxQuestionOption
                 v-for="(option, index) in options"
                 :key="'survey_option_' + index"
                 :option="option"

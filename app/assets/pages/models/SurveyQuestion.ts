@@ -2,7 +2,7 @@ import { SurveyQuestionOption } from "./SurveyQuestionOption";
 
 export interface SurveyQuestion {
     id?: number,
-    survey_id?: number,
+    surveyId?: number,
 
     type: string,
     title: string,
@@ -14,8 +14,9 @@ export interface SurveyQuestion {
     optional: boolean,
 
     options: SurveyQuestionOption[],
+    extraOptions: Record<string, any>,
 
-    created_at?: string,
-    updated_at?: string,
-    deleted_at?: string,
+    createdAt?: string,
+    updatedAt?: string,
+    deletedAt?: string,
 }

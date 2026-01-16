@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { ref, provide, inject, onMounted, onUnmounted } from 'vue'
-import type { SurveyOptionRegistry, SurveyOptionHandle } from '../../registers/SurveyOptionRegistry';
+import { ref, provide, inject, onMounted, onUnmounted } from 'vue';
+import type { SurveyOptionRegistry, SurveyOptionHandle } from '../../registers/SurveyOptionRegistry'; 
 import type { SurveyQuestionRegistry, SurveyQuestionHandle } from '../../registers/SurveyQuestionRegistry'; 
 import { SurveyQuestion } from '../../models/SurveyQuestion';
-import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff, SquareStack } from 'lucide-vue-next';
+import { ArrowBigUp, ArrowBigDown, Trash2, Eye, EyeOff, CircleDot } from 'lucide-vue-next';
 import Btn from '../../../components/Btn.vue';
-import CheckboxQuestionSurveyOptions from './CheckboxQuestionSurveyOptions.vue';
+import RadioQuestionOptions from './RadioQuestionOptions.vue';
 import Separator from '../../../components/Separator.vue';
 import InputText from '../../../components/InputText.vue';
-import InputNumber from '../../../components/InputNumber.vue';
 import OnOff from '../../../components/OnOff.vue';
 import { SurveyQuestionOption } from '../../models/SurveyQuestionOption';
 
@@ -32,8 +31,6 @@ const errors = ref<{
     title?: boolean,
     options?: boolean,
     optionsEmpty?: boolean,
-    minOptionsLimit?: boolean,
-    maxOptionsLimit?: boolean,
 }>();
 
 const valid = (): boolean => {
@@ -41,8 +38,6 @@ const valid = (): boolean => {
         title: isTitleError(),
         options: isOptionsError(),
         optionsEmpty: isOptionsEmptyError(),
-        minOptionsLimit: isMinOptionsLimitError(),
-        maxOptionsLimit: isMaxOptionsLimitError(),
     };
 
     validateAllOptions();
@@ -62,18 +57,6 @@ const isOptionsError = (): boolean => {
 
 const isOptionsEmptyError = (): boolean => {
     return props.question.options.length === 0;
-}
-
-const isMinOptionsLimitError = (): boolean => {
-    return props.question.minOptionsLimit < 0 ||
-        props.question.minOptionsLimit > props.question.maxOptionsLimit ||
-        props.question.minOptionsLimit > props.question.options.length;
-}
-
-const isMaxOptionsLimitError = (): boolean => {
-    return props.question.maxOptionsLimit < 0 ||
-        props.question.maxOptionsLimit > props.question.options.length ||
-        props.question.maxOptionsLimit < props.question.minOptionsLimit;
 }
 
 function validateAllOptions(): boolean {
@@ -134,9 +117,9 @@ const toggleVisibility = () => {
         :class="[! question.visible && 'opacity-30']"
     >
         <div class="flex gap-1 items-center mb-3">
-            <SquareStack class="mr-2" />
+            <CircleDot class="mr-2" />
             <div class="flex-1 text-gray-500 font-bold text-xs">
-                Multi choice
+                Single choice
             </div>
             <div>
                 <Btn class="p-1!" :disabled="isFirst" @click="emit('moveUp', index)">
@@ -163,31 +146,15 @@ const toggleVisibility = () => {
         <div class="grid gap-2 p-2">
             <InputText
                 v-model="question.title"
-                class="w-3/4 rounded-xs"
+                class="w-3/4 p-1 rounded-xs"
                 placeholder="Enter your question"
                 label="Title:"
                 :error="errors?.title ? 'The field cannot remain empty' : ''"
             />
-            <div class="flex gap-2">
-                <InputNumber
-                    v-model="question.minOptionsLimit"
-                    label="Min. selected options"
-                    :min="0"
-                    :max="30"
-                    :error="errors?.minOptionsLimit ? 'The field contains errors' : ''"
-                />
-                <InputNumber
-                    v-model="question.maxOptionsLimit"
-                    label="Max. selected options"
-                    :min="0"
-                    :max="30"
-                    :error="errors?.maxOptionsLimit ? 'The field contains errors' : ''"
-                />
-            </div>
             <OnOff v-model="question.draft" label="Mark as draft" />
             <OnOff v-model="question.required" label="Response is required" />
             <div v-if="errors?.optionsEmpty" class="px-4 pt-4 text-xs text-red-500">The list of answers cannot be empty</div>
-            <CheckboxQuestionSurveyOptions :options="question.options" />
+            <RadioQuestionOptions :options="question.options" />
         </div>
     </div>
     <Separator v-if="isLast" label="Add query here" @click="emit('addQuestion', index + 1)" />

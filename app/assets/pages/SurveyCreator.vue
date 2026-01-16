@@ -4,7 +4,7 @@ import axios from 'axios';
 import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
 import { User } from '../types/User';
-import { SURVEY_COMPONENT_MAP } from '../types/SurveyComponentMap';
+import { SURVEY_COMPONENT_MAP, SurveyComponentsKeys } from '../types/SurveyComponentMap';
 import { TriangleAlert } from 'lucide-vue-next';
 import InputText from '../components/InputText.vue';
 import OnOff from '../components/OnOff.vue';
@@ -21,7 +21,7 @@ const props = defineProps<{
 
 const survey = ref<Survey>(createSurvey());
 
-const addQuestion = (index: number, type?: string) => {
+const addQuestion = (index: number, type?: SurveyComponentsKeys) => {
     if (! survey.value.questions) {
         return;
     }
@@ -36,6 +36,7 @@ const addQuestion = (index: number, type?: string) => {
         draft: false,
         required: true,
         optional: false,
+        extraOptions: {},
     })
 };
 
@@ -124,8 +125,8 @@ function validateAllQuestions(): boolean {
                             <div class="grid grid-cols-1 gap-3">
                                 <InputText v-model="survey.title" placeholder="Title" />
                                 <OnOff v-model="survey.draft" label="Draft" />
-                                <OnOff v-model="survey.password_required" label="Password required" />
-                                <InputText v-if="survey.password_required" v-model="survey.password" placeholder="Password" label="Password:" />
+                                <OnOff v-model="survey.passwordRequired" label="Password required" />
+                                <InputText v-if="survey.passwordRequired" v-model="survey.password" placeholder="Password" label="Password:" />
                                 <Btn type="dark" @click="validateAllQuestions">
                                     <div class="flex items-center">
                                         <div class="flex-1">Check the form</div>
@@ -141,17 +142,15 @@ function validateAllQuestions(): boolean {
                                 <Separator class="pt-6" fullVisibility :clickable="false">Time details</Separator>
                                 <p class="text-sm text-gray-600">
                                     First save:
-                                    {{ survey.created_at }}
+                                    {{ survey.createdAt }}
                                 </p>
                                 <p class="text-sm text-gray-600">
                                     Last save:
-                                    {{ survey.updated_at }}
+                                    {{ survey.updatedAt }}
                                 </p>
                                 
                                 <!-- 
-                                <Btn type="primary" @click="addQuestion(surveyOptions.length, 'verbal-response')">Verbal response</Btn>
                                 <Btn type="primary" @click="addQuestion(surveyOptions.length, 'dropdown-options')">Dropdown options</Btn>
-                                <Btn type="primary" @click="addQuestion(surveyOptions.length, 'linear-scale')">Linear scale</Btn>
                                 <Btn type="primary" @click="addQuestion(surveyOptions.length, 'date-choice')">Date choice</Btn> -->
                             </div>
                         </div>

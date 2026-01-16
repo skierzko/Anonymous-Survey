@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SURVEY_COMPONENT_MAP } from '../../../types/SurveyComponentMap';
+import { SURVEY_COMPONENT_MAP, SurveyComponentsKeys } from '../../../types/SurveyComponentMap';
 import { SurveyQuestion } from '../../models/SurveyQuestion';
 import { Trash2 } from 'lucide-vue-next';
 import Separator from '../../../components/Separator.vue';
@@ -17,8 +17,24 @@ const emit = defineEmits<{
     (e: 'remove', index: number): void,
 }>();
 
-const setQuestionType = (type: string) => {
+const setQuestionType = (type: SurveyComponentsKeys) => {
     props.question.type = type;
+
+    if (type === 'open_question_survey') {
+        props.question.minOptionsLimit = 1;
+        props.question.maxOptionsLimit = 6000;
+    }
+
+    if (type === 'rating_scale_question_survey') {
+        props.question.minOptionsLimit = 1;
+        props.question.maxOptionsLimit = 10;
+    }
+
+    if (type === 'date_range_question_survey') {
+        props.question.extraOptions = {
+            viewSingleDate: false,
+        };
+    }
 }
 </script>
 
