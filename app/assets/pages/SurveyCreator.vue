@@ -13,11 +13,18 @@ import Separator from '../components/Separator.vue';
 import { Survey } from './models/Survey';
 import { createSurvey } from './models/factory/Survey.factory';
 import type { SurveyQuestionHandle, SurveyQuestionRegistry } from './registers/SurveyQuestionRegistry';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const props = defineProps<{
     csrfToken: string,
     userLogged?: User,
 }>()
+
+const errors = ref<{
+    title?: boolean,
+    password?: boolean,
+}>();
 
 const survey = ref<Survey>(createSurvey());
 
@@ -72,7 +79,16 @@ const remove = (index: number): void => {
     survey.value.questions.splice(index, 1);
 }
 
-const save = async () => {
+const save = async (): Promise<void> => {
+    if (! validateAllData()) {
+        toast.warning('Correct the data in the form before saving the data', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 2000,
+        });
+
+        return;
+    }
+
     console.log(survey.value);
     // await axios.post()
 }
@@ -94,7 +110,14 @@ provide('survey-question-registry', surveyQuestionRegisters)
 
 const isReadyToSave = ref<boolean>(false);
 
-function validateAllQuestions(): boolean {
+function validateAllData(): boolean {
+    validLocalData();
+
+    if (surveyQuestionsHandles.length === 0) {
+        return false;
+    }
+
+
     let isValid = true
     for (const h of surveyQuestionsHandles) {
         if (!h.valid()) {
@@ -105,6 +128,23 @@ function validateAllQuestions(): boolean {
     isReadyToSave.value = isValid;
 
     return isValid;
+}
+
+function validLocalData(): boolean {
+    errors.value = {
+        title: isTitleError(),
+        password: isPasswordError(),
+    }
+
+    return Object.values(errors.value).every(value => value === false);
+}
+
+const isTitleError = (): boolean => {
+    return survey.value.title.trim().length === 0;
+}
+
+const isPasswordError = (): boolean => {
+    return survey.value.passwordRequired && survey.value.password.trim().length < 6;
 }
 </script>
 
@@ -123,11 +163,20 @@ function validateAllQuestions(): boolean {
                             <div class="text-xl mb-4">Options</div>
 
                             <div class="grid grid-cols-1 gap-3">
-                                <InputText v-model="survey.title" placeholder="Title" />
+                                <InputText
+                                    v-model="survey.title" placeholder="Title"
+                                    :error="errors?.title ? 'The field cannot remain empty' : ''"
+                                />
                                 <OnOff v-model="survey.draft" label="Draft" />
                                 <OnOff v-model="survey.passwordRequired" label="Password required" />
-                                <InputText v-if="survey.passwordRequired" v-model="survey.password" placeholder="Password" label="Password:" />
-                                <Btn type="dark" @click="validateAllQuestions">
+                                <InputText
+                                    v-if="survey.passwordRequired"
+                                    v-model="survey.password"
+                                    placeholder="Password"
+                                    label="Password:"
+                                    :error="errors?.password ? 'Enter at least 6 characters' : ''"
+                                />
+                                <Btn v-if="false" type="dark" @click="validateAllData">
                                     <div class="flex items-center">
                                         <div class="flex-1">Check the form</div>
                                         <div class="text-xs">{{ isReadyToSave ? 'PASSED' : 'REJECTED' }}</div>
