@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { SURVEY_COMPONENT_MAP, SurveyComponentsKeys } from '../../../types/SurveyComponentMap';
 import { SurveyQuestion } from '../../models/SurveyQuestion';
 import { Trash2 } from 'lucide-vue-next';
@@ -36,6 +37,10 @@ const setQuestionType = (type: SurveyComponentsKeys) => {
         };
     }
 }
+
+onMounted(() => {
+    props.question.position = props.index;
+})
 </script>
 
 <template>

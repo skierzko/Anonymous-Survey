@@ -43,6 +43,7 @@ const addQuestion = (index: number, type?: SurveyComponentsKeys) => {
         draft: false,
         required: true,
         optional: false,
+        position: index,
         extraOptions: {},
     })
 };
@@ -81,16 +82,18 @@ const remove = (index: number): void => {
 
 const save = async (): Promise<void> => {
     if (! validateAllData()) {
-        toast.warning('Correct the data in the form before saving the data', {
+        toast.warning(
+            surveyQuestionsHandles.length 
+                ? 'Correct the data in the form before saving the data'
+                : 'Add at least one question before saving', {
             position: toast.POSITION.TOP_RIGHT,
-            autoClose: 2000,
+            autoClose: 2500,
         });
 
         return;
     }
 
-    console.log(survey.value);
-    // await axios.post()
+    await axios.post('/survey/save', survey.value);
 }
 
 const surveyQuestionsHandles: SurveyQuestionHandle[] = [];

@@ -12,6 +12,7 @@ export interface SurveyQuestion {
     draft: boolean,
     required: boolean,
     optional: boolean,
+    position: number,
 
     options: SurveyQuestionOption[],
     extraOptions: Record<string, any>,

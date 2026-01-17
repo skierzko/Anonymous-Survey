@@ -4,6 +4,7 @@ export interface SurveyQuestionOption {
 
     title: string,
     visible: boolean,
+    position: number,
 
     createdAt?: string,
     updatedAt?: string,

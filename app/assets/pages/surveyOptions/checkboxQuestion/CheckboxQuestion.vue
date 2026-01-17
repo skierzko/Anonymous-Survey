@@ -96,11 +96,11 @@ if (!surveyQuestionRegistry) {
 const surveyQuestionHandle: SurveyQuestionHandle = { valid }
 
 onMounted(() => {
-  surveyQuestionRegistry.register(surveyQuestionHandle)
+    surveyQuestionRegistry.register(surveyQuestionHandle)
 })
 
 onUnmounted(() => {
-  surveyQuestionRegistry.unregister(surveyQuestionHandle)
+    surveyQuestionRegistry.unregister(surveyQuestionHandle)
 })
 
 /** Registry from children */
@@ -125,6 +125,10 @@ provide('survey-option-registry', surveyOptionsRegisters)
 const toggleVisibility = () => {
     props.question.visible = !props.question.visible;
 }
+
+onMounted(() => {
+    props.question.position = props.index;
+})
 </script>
 
 <template>

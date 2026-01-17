@@ -16,7 +16,7 @@ const props = defineProps<{
 
 const registry = inject<SurveyOptionRegistry>('survey-option-registry')
 if (!registry) {
-  throw new Error('survey-option-registry not provided')
+    throw new Error('survey-option-registry not provided')
 }
 
 const error = ref<boolean>(false);
@@ -42,11 +42,12 @@ const valid = (): boolean => {
 const handle: SurveyOptionHandle = { valid }
 
 onMounted(() => {
-  registry.register(handle)
+    registry.register(handle)
+    props.option.position = props.index;
 })
 
 onUnmounted(() => {
-  registry.unregister(handle)
+    registry.unregister(handle)
 })
 </script>
 

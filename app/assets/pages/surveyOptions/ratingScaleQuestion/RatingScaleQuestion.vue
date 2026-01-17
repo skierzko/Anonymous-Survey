@@ -121,6 +121,10 @@ provide('survey-option-registry', surveyOptionsRegisters)
 const toggleVisibility = () => {
     props.question.visible = !props.question.visible;
 }
+
+onMounted(() => {
+    props.question.position = props.index;
+})
 </script>
 
 <template>

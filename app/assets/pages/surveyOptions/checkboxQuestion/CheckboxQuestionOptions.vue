@@ -13,21 +13,30 @@ const addOption = (index: number) => {
         id: undefined,
         title: '',
         visible: true,
-    })
+        position: index,
+    });
+    rewriteOptionsPositions();
 };
 
 const moveUp = (index: number): void => {
   if (index <= 0 || index >= props.options.length) return
   props.options.splice(index - 1, 2, props.options[index], props.options[index - 1]);
+  rewriteOptionsPositions();
 }
 
 const moveDown = (index: number): void => {
   if (index < 0 || index >= props.options.length - 1) return
   props.options.splice(index, 2, props.options[index + 1], props.options[index]);
+  rewriteOptionsPositions();
 }
 
 const remove = (index: number): void => {
     props.options.splice(index, 1);
+    rewriteOptionsPositions();
+}
+
+const rewriteOptionsPositions = () => {
+    props.options.forEach((option, index) => option.position = index);
 }
 </script>
 

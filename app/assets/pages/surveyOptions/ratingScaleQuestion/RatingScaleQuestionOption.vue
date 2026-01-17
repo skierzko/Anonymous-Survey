@@ -43,6 +43,7 @@ const handle: SurveyOptionHandle = { valid }
 
 onMounted(() => {
   registry.register(handle)
+  props.option.position = props.index;
 })
 
 onUnmounted(() => {

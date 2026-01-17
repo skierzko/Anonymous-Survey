@@ -58,17 +58,17 @@ const isMaxOptionsLimitError = (): boolean => {
 
 const surveyQuestionRegistry = inject<SurveyQuestionRegistry>('survey-question-registry')
 if (!surveyQuestionRegistry) {
-  throw new Error('survey-question-registry not provided')
+    throw new Error('survey-question-registry not provided')
 }
 
 const surveyQuestionHandle: SurveyQuestionHandle = { valid }
 
 onMounted(() => {
-  surveyQuestionRegistry.register(surveyQuestionHandle)
+    surveyQuestionRegistry.register(surveyQuestionHandle)
 })
 
 onUnmounted(() => {
-  surveyQuestionRegistry.unregister(surveyQuestionHandle)
+    surveyQuestionRegistry.unregister(surveyQuestionHandle)
 })
 
 /** Other */
@@ -76,6 +76,10 @@ onUnmounted(() => {
 const toggleVisibility = () => {
     props.question.visible = !props.question.visible;
 }
+
+onMounted(() => {
+    props.question.position = props.index;
+})
 </script>
 
 <template>
