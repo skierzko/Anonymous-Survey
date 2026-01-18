@@ -19,6 +19,7 @@ import 'vue3-toastify/dist/index.css';
 const props = defineProps<{
     csrfToken: string,
     userLogged?: User,
+    id?: number,
 }>()
 
 const errors = ref<{

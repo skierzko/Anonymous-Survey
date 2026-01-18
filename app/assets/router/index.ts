@@ -48,6 +48,15 @@ const routes: RouteRecordRaw[] = [
             requiresAuth: true,
         },
     },
+    {
+        path: '/survey/:id(\\d+)',
+        name: 'SurveyCreator',
+        component: SurveyCreator,
+        props: true,
+        meta: {
+            requiresAuth: true,
+        },
+    }
 ]
 
 export const router = createRouter({
