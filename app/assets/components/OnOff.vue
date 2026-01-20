@@ -53,12 +53,11 @@ function toggle() {
         </button>
 
         <label
-            v-if="label"
             :for="switchId"
             class="text-sm text-gray-700 cursor-pointer select-none"
             @click.prevent="toggle"
         >
-            {{ label }}
+            <slot>{{ label }}</slot>
         </label>
     </div>
 </template>
