@@ -1,8 +1,10 @@
 <script setup lang="ts">
+type btnType = 'default' | 'primary' | 'danger' | 'success' | 'warning' | 'info' | 'light' | 'dark' | 'link' | 'text' | 'ghost' | 'outline';
+
 interface Props {
     disabled?: boolean;
     href?: string;
-    type?: string;
+    type?: btnType;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -15,7 +17,7 @@ withDefaults(defineProps<Props>(), {
 <template>
     <component
         :is="href ? 'a' : 'div'"
-        class="inline-block py-2 px-4 mx-0 rounded-sm cursor-pointer transition duration-300 select-none"
+        class="inline-block py-2 px-4 mx-0 rounded-sm cursor-pointer transition duration-300 select-none align-top"
         :class="[
             disabled && 'opacity-50 cursor-not-allowed',
             !disabled && 'active:scale-80',
