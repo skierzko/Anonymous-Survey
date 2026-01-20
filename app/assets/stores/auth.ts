@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
+import { api } from "../pages/services/api";
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -15,7 +16,7 @@ export const useAuthStore = defineStore('auth', {
     async fetchUser() {
       this.loading = true
       try {
-        const res = await axios.get('/api/me', { withCredentials: true })
+        const res = await api.get('/user', { withCredentials: true })
         this.user = res.data
       } catch {
         this.user = null
