@@ -7,10 +7,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
-
 use App\Dto\Survey\CreateSurveyRequest;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Validator\Constraints\Valid;
 
 use App\Entity\User;
 use App\Service\SurveyService;
@@ -35,9 +33,11 @@ class SurveyController extends AbstractController
 
         $survey = $surveyService->saveSurvey($request, $em);
 
-        return $this->json([
-            'status' => ! empty($survey),
-            'surveyId' => $survey->getId(),
-        ]);
+        return $this->json(
+            $survey,
+            status: 200,
+            headers: [],
+            context: ['groups' => ['user:read']]
+        );
     }
 }

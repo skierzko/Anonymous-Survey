@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SurveyQuestionOptionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SurveyQuestionOptionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -14,6 +15,7 @@ class SurveyQuestionOption
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'options')]
@@ -21,21 +23,27 @@ class SurveyQuestionOption
     private ?SurveyQuestion $question = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private string $title;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private bool $visible = true;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $position = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['user:read'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['user:read'])]
     private \DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['user:read'])]
     private ?\DateTimeImmutable $deletedAt = null;
 
     #[ORM\PrePersist]
@@ -55,11 +63,6 @@ class SurveyQuestionOption
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getQuestion(): ?SurveyQuestion
-    {
-        return $this->question;
     }
 
     public function setQuestion(?SurveyQuestion $question): self

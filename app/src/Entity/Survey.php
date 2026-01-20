@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SurveyRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,24 +17,30 @@ class Survey
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $userId = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private string $title;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private bool $draft = false;
 
     #[ORM\Column(length: 255, unique: true)]
+    #[Groups(['user:read'])]
     private string $slug;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private bool $passwordRequired = false;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read'])]
     private ?string $password = null;
 
     #[ORM\OneToMany(
@@ -42,21 +49,31 @@ class Survey
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
+    #[Groups(['user:read'])]
     private Collection $questions;
 
     #[ORM\Column(type: Types::JSON)]
+    #[Groups(['user:read'])]
     private array $extraOptions = [];
 
+    #[ORM\Column]
+    #[Groups(['user:read'])]
+    private bool $isPublic = false;
+
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['user:read'])]
     private \DateTimeImmutable $publicAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['user:read'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['user:read'])]
     private \DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['user:read'])]
     private ?\DateTimeImmutable $deletedAt = null;
 
     public function __construct()
@@ -161,18 +178,6 @@ class Survey
     {
         if (!$this->questions->contains($question)) {
             $this->questions->add($question);
-            $question->setSurvey($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQuestion(SurveyQuestion $question): self
-    {
-        if ($this->questions->removeElement($question)) {
-            if ($question->getSurvey() === $this) {
-                $question->setSurvey(null);
-            }
         }
 
         return $this;
@@ -186,6 +191,17 @@ class Survey
     public function setExtraOptions(array $extraOptions): self
     {
         $this->extraOptions = $extraOptions;
+        return $this;
+    }
+
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function setIsPublic(bool $isPublic): self
+    {
+        $this->isPublic = $isPublic;
         return $this;
     }
 

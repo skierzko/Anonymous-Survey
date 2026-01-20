@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
-import { Survey } from './models/Survey';
 import { DiamondPlus } from 'lucide-vue-next';
 import { User } from '../types/User';
+import SurveyList from './userBoard/SurveyList.vue';
 
 const props = defineProps<{
     csrfToken: string,
     userLogged?: User,
 }>()
-
-const list = ref<Survey[]>([]);
 
 </script>
 
@@ -32,7 +29,7 @@ const list = ref<Survey[]>([]);
 
                 <div
                     class="gap-4 sm:flex"
-                    :class="[list.length === 0 && 'items-center']"
+                    
                 >
                     <div class="sm:w-[200px]">
                         <RouterLink to="/survey-creator">
@@ -43,12 +40,7 @@ const list = ref<Survey[]>([]);
                         </RouterLink>
                     </div>
                     <div class="flex-4">
-                        <div v-if="list.length">
-                            List...
-                        </div>
-                        <div v-else class="text-center text-gray-500">
-                            No surveys yet. Create your first one! <DiamondPlus :stroke-with="1" class="inline-block" />
-                        </div>
+                        <SurveyList />
                     </div>
                 </div>
             </section>

@@ -11,6 +11,7 @@ export function createSurvey(): Survey {
     password: "",
     questions: [],
     extraOptions: {},
+    isPublic: false,
 
     publicAt: "",
     createdAt: "",

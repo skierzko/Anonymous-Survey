@@ -45,7 +45,8 @@ class SurveyService
             ->setDraft($dto->draft)
             ->setPasswordRequired($dto->passwordRequired)
             ->setPassword($dto->password)
-            ->setExtraOptions($dto->extraOptions);
+            ->setExtraOptions($dto->extraOptions)
+            ->setIsPublic($dto->isPublic);
 
         $this->saveSurveyQuestionsData($survey, $dto);
 

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SurveyQuestionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,6 +17,7 @@ class SurveyQuestion
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
@@ -23,30 +25,39 @@ class SurveyQuestion
     private ?Survey $survey = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(['user:read'])]
     private string $type;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private string $title;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private bool $visible = true;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private int $minOptionsLimit = 0;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private int $maxOptionsLimit = 0;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private bool $draft = false;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private bool $required = false;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private bool $optional = false;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $position = null;
 
     #[ORM\OneToMany(
@@ -55,18 +66,23 @@ class SurveyQuestion
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
+    #[Groups(['user:read'])]
     private Collection $options;
 
     #[ORM\Column(type: Types::JSON)]
+    #[Groups(['user:read'])]
     private array $extraOptions = [];
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['user:read'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Groups(['user:read'])]
     private \DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Groups(['user:read'])]
     private ?\DateTimeImmutable $deletedAt = null;
 
     public function __construct()
@@ -91,11 +107,6 @@ class SurveyQuestion
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getSurvey(): ?Survey
-    {
-        return $this->survey;
     }
 
     public function setSurvey(?Survey $survey): self
@@ -216,17 +227,6 @@ class SurveyQuestion
         if (!$this->options->contains($option)) {
             $this->options->add($option);
             $option->setQuestion($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOption(SurveyQuestionOption $option): self
-    {
-        if ($this->options->removeElement($option)) {
-            if ($option->getQuestion() === $this) {
-                $option->setQuestion(null);
-            }
         }
 
         return $this;

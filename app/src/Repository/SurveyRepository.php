@@ -18,7 +18,7 @@ class SurveyRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->andWhere('s.draft = false')
             ->andWhere('s.deletedAt IS NULL')
-            ->andWhere('s.publicAt <= :now')
+            ->andWhere('s.isPublic = 1')
             ->setParameter('now', new \DateTimeImmutable())
             ->orderBy('s.createdAt', 'DESC')
             ->getQuery()

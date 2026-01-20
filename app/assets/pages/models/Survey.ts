@@ -11,7 +11,8 @@ export interface Survey {
     password: string,
     questions?: SurveyQuestion[],
     extraOptions: Record<string, boolean | string | number>,
-
+    isPublic: boolean,
+    
     publicAt: string,
     createdAt: string,
     updatedAt: string,

@@ -36,6 +36,5 @@ class CreateSurveyRequest
     #[Assert\Type('array')]
     public array $extraOptions = [];
 
-    #[Assert\DateTime]
-    public ?string $publicAt = null;
+    public bool $isPublic = false;
 }

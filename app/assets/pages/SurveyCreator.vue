@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, provide } from 'vue';
+import { ref, provide, onMounted, watch } from 'vue';
 import axios from 'axios';
 import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
 import { User } from '../types/User';
 import { SURVEY_COMPONENT_MAP, SurveyComponentsKeys } from '../types/SurveyComponentMap';
-import { TriangleAlert } from 'lucide-vue-next';
+import { TriangleAlert, Globe } from 'lucide-vue-next';
 import InputText from '../components/InputText.vue';
 import OnOff from '../components/OnOff.vue';
 import Pill from '../components/Pill.vue';
@@ -15,6 +15,10 @@ import { createSurvey } from './models/factory/Survey.factory';
 import type { SurveyQuestionHandle, SurveyQuestionRegistry } from './registers/SurveyQuestionRegistry';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
+import { useSurveyStore } from '../stores/survey';
+import dayjs from 'dayjs';
+
+const surveyStore = useSurveyStore();
 
 const props = defineProps<{
     csrfToken: string,
@@ -28,6 +32,20 @@ const errors = ref<{
 }>();
 
 const survey = ref<Survey>(createSurvey());
+
+onMounted(async () => {
+    if (! props.id) {
+        return;
+    }
+
+    await surveyStore.fetchSurveyByUserAndSurveyId(props.id);
+    console.log(surveyStore.surveys);
+    if (surveyStore.surveys.length !== 1) {
+        return;
+    }
+    
+    survey.value = surveyStore.surveys[0];
+});
 
 const addQuestion = (index: number, type?: SurveyComponentsKeys) => {
     if (! survey.value.questions) {
@@ -173,6 +191,12 @@ const isPasswordError = (): boolean => {
                                 />
                                 <OnOff v-model="survey.draft" label="Draft" />
                                 <OnOff v-model="survey.passwordRequired" label="Password required" />
+                                <OnOff v-model="survey.isPublic">
+                                    <div class="flex gap-2 items-center">
+                                        Make public
+                                        <Globe class="inline" :size="18" :stroke-width="1.3" />
+                                    </div>
+                                </OnOff>
                                 <InputText
                                     v-if="survey.passwordRequired"
                                     v-model="survey.password"
@@ -186,7 +210,9 @@ const isPasswordError = (): boolean => {
                                         <div class="text-xs">{{ isReadyToSave ? 'PASSED' : 'REJECTED' }}</div>
                                     </div>
                                 </Btn>
-                                <Btn type="success" class="w-full" @click="save">Save</Btn>
+                                <Btn type="success" class="w-full" @click="save">
+                                    {{ props.id ? 'Update the survey' : 'Create the survey' }}
+                                </Btn>
                                 <Separator class="pt-6" fullVisibility :clickable="false">Details</Separator>
                                 <p class="flex gap-2 items-center text-sm text-gray-600">
                                     Created questions:
@@ -194,12 +220,16 @@ const isPasswordError = (): boolean => {
                                 </p>
                                 <Separator class="pt-6" fullVisibility :clickable="false">Time details</Separator>
                                 <p class="text-sm text-gray-600">
-                                    First save:
-                                    {{ survey.createdAt }}
+                                    Created:
+                                    {{ dayjs(survey.createdAt).format('YYYY-MM-DD HH:mm') }}
                                 </p>
                                 <p class="text-sm text-gray-600">
-                                    Last save:
-                                    {{ survey.updatedAt }}
+                                    Updated:
+                                    {{ dayjs(survey.updatedAt).format('YYYY-MM-DD HH:mm') }}
+                                </p>
+                                <p v-if="survey.publicAt" class="text-sm text-gray-600">
+                                    Publicated:
+                                    {{ dayjs(survey.publicAt).format('YYYY-MM-DD HH:mm') }}
                                 </p>
                                 
                                 <!-- 
@@ -211,30 +241,38 @@ const isPasswordError = (): boolean => {
                     <div class="flex-1 mt-16 md:mt-0">
                         <div class="text-xl mb-4">Survey questions</div>
 
-                        <div class="grid gap-4 grid-cols-1">
-                            <template v-for="(surveyOption, index) in survey.questions" :key="'query-' + index">
-                                <component
-                                    :is="SURVEY_COMPONENT_MAP[surveyOption.type].c"
-                                    :question="surveyOption"
-                                    :index="index"
-                                    :is-first="index === 0"
-                                    :is-last="index === (survey.questions?.length ?? 0) - 1"
-                                    @move-up="moveUp"
-                                    @move-down="moveDown"
-                                    @remove="remove"
-                                    @add-question="addQuestion"
-                                />
-                            </template>
-                        </div>
-
-                        <p
-                            v-if="(survey.questions?.length ?? 0) === 0"
-                            class="flex gap-4 items-center p-4 bg-sky-800 text-white rounded-xs"
+                        <div
+                            v-if="props.id && surveyStore.loading"
+                            class="text-center text-xl text-gray-500"
                         >
-                            <TriangleAlert />
-                            Create the first question by clicking on the button on the right.
-                            <Btn @click="addQuestion(0)">Create question</Btn>
-                        </p>
+                            Loading data...
+                        </div>
+                        <template v-else>
+                            <div class="grid gap-4 grid-cols-1">
+                                <template v-for="(surveyOption, index) in survey.questions" :key="'query-' + index">
+                                    <component
+                                        :is="SURVEY_COMPONENT_MAP[surveyOption.type].c"
+                                        :question="surveyOption"
+                                        :index="index"
+                                        :is-first="index === 0"
+                                        :is-last="index === (survey.questions?.length ?? 0) - 1"
+                                        @move-up="moveUp"
+                                        @move-down="moveDown"
+                                        @remove="remove"
+                                        @add-question="addQuestion"
+                                    />
+                                </template>
+                            </div>
+
+                            <p
+                                v-if="(survey.questions?.length ?? 0) === 0"
+                                class="flex gap-4 items-center p-4 bg-sky-800 text-white rounded-xs"
+                            >
+                                <TriangleAlert />
+                                Create the first question by clicking on the button on the right.
+                                <Btn @click="addQuestion(0)">Create question</Btn>
+                            </p>
+                        </template>
                     </div>
                 </div>
             </section>
