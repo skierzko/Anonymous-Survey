@@ -2,9 +2,9 @@
 import { ref, reactive } from 'vue';
 import Btn from '../components/Btn.vue';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
-import axios from 'axios';
 import { User } from '../types/User';
 import { useRouter } from 'vue-router'
+import { login as loginService } from "../pages/services/login";
 
 
 const props = defineProps<{
@@ -27,7 +27,7 @@ const successful = ref<boolean>(false);
 const errors = ref<[]>([]);
 const router = useRouter()
 
-const login = async () => {
+const login = async (): Promise<void> => {
     if (sending.value) {
         return;
     }
@@ -35,8 +35,8 @@ const login = async () => {
     errors.value = [];
     sending.value = true;
 
-    await axios.post(
-        '/login',
+    await loginService.post(
+        '',
         {
             email: form.email,
             password: form.password,

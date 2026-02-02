@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import axios from 'axios'
 import { api } from "../pages/services/api";
+import { logout as logoutService } from '../pages/services/logout';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -26,7 +26,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async logout() {
-      await axios.post('/logout', {}, { withCredentials: true })
+      await logoutService.post('', {}, { withCredentials: true })
       this.user = null
     }
   }

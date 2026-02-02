@@ -2,8 +2,8 @@
 import { ref, reactive } from 'vue';
 import Btn from '../components/Btn.vue';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
-import axios from 'axios';
 import { User } from '../types/User';
+import { register as registerService } from "../pages/services/register";
 
 const props = defineProps<{
     csrfToken: string,
@@ -43,7 +43,7 @@ const register = async () => {
     data.append('registration_form[agreeTerms]', form.agree_terms ? 'true' : 'false')
     data.append('registration_form[_token]', document.querySelector('[csrftoken]')?.getAttribute('csrftoken') ?? '')
 
-    await axios.post('/register', data)
+    await registerService.post('', data)
     .then((response) => {
         if (response.data.status) {
             successful.value = true;
