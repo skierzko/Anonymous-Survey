@@ -21,7 +21,7 @@ class SurveyQuestionRepository extends ServiceEntityRepository
             ->andWhere('q.visible = true')
             ->andWhere('q.deletedAt IS NULL')
             ->setParameter('surveyId', $surveyId)
-            ->orderBy('q.id', 'ASC')
+            ->orderBy('q.position', 'ASC')
             ->getQuery()
             ->getResult();
     }

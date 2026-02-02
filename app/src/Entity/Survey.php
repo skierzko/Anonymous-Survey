@@ -49,6 +49,7 @@ class Survey
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     #[Groups(['user:read'])]
     private Collection $questions;
 
