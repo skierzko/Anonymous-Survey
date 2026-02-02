@@ -93,7 +93,7 @@ class SurveyService
         }
 
         foreach ($existingQuestions as $questionToDelete) {
-            $questionToDelete->setDeletedAt($this->now);
+            $questionToDelete->softDelete();
         }
     }
 
@@ -127,7 +127,7 @@ class SurveyService
         }
 
         foreach ($existingOptions as $optionToDelete) {
-            $optionToDelete->setDeletedAt($this->now);
+            $optionToDelete->softDelete();
         }
     }
 
