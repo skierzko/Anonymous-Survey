@@ -4,7 +4,7 @@ import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
 import { User } from '../types/User';
 import { SURVEY_COMPONENT_MAP, SurveyComponentsKeys } from '../types/SurveyComponentMap';
-import { TriangleAlert, Globe, Trash2 } from 'lucide-vue-next';
+import { TriangleAlert, Globe, Trash2, ExternalLink } from 'lucide-vue-next';
 import InputText from '../components/InputText.vue';
 import OnOff from '../components/OnOff.vue';
 import Pill from '../components/Pill.vue';
@@ -18,6 +18,7 @@ import { useSurveyStore } from '../stores/survey';
 import dayjs from 'dayjs';
 import { useRouter } from 'vue-router';
 import Confirm from '../components/Confirm.vue';
+import NotifyBar from '../components/NotifyBar.vue';
 
 const surveyStore = useSurveyStore();
 const router = useRouter();
@@ -36,7 +37,12 @@ const errors = ref<{
 const survey = ref<Survey>(createSurvey());
 
 onMounted(async () => {
+    await loadSurvey();
+});
+
+const loadSurvey = async (): Promise<void> => {
     if (! props.id) {
+        surveyStore.isDeleted = false;
         return;
     }
 
@@ -54,7 +60,7 @@ onMounted(async () => {
     }
     
     survey.value = surveyStore.surveys[0];
-});
+};
 
 const addQuestion = (index: number, type?: SurveyComponentsKeys) => {
     if (! survey.value.questions) {
@@ -121,7 +127,18 @@ const save = async (): Promise<void> => {
         return;
     }
 
-    surveyStore.saveSurvey(survey.value);
+    await surveyStore.saveSurvey(survey.value);
+
+    toast.success(
+        props.id ? 'Survey updated successfully' : 'Survey created successfully', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 1000,
+    });
+
+    setTimeout(() => {  
+        // router.push('/survey/' + surveyStore.surveys[0].id); // Spa reload
+        window.location.href = `/survey/${surveyStore.surveys[0].id}`; // Full reload
+    }, 1000);
 }
 
 const surveyQuestionsHandles: SurveyQuestionHandle[] = [];
@@ -209,6 +226,11 @@ const deleteSurvey = async (): Promise<void> => {
     setTimeout(() => {
         router.push('/user-board');
     }, 2500);
+}
+
+const linkToSurvey = () => {
+    const baseUrl = window.location.origin;
+    return props.id ?  baseUrl + `/survey/show/${survey.value.slug}` : '';
 }
 </script>
 
@@ -329,6 +351,21 @@ const deleteSurvey = async (): Promise<void> => {
                     </div>
                     <div class="flex-1 mt-16 md:mt-0">
                         <div class="text-xl mb-4">Survey questions</div>
+
+                        <NotifyBar v-if="survey.isPublic && survey.id">
+                            <template #icon>
+                                <ExternalLink />
+                            </template>
+                            <template #default>
+                                Your survey link:
+                                <RouterLink
+                                    :to="`/survey/show/${survey.slug}`"
+                                    class="ml-1 text-blue-600 underline"
+                                >
+                                    {{ linkToSurvey() }}
+                                </RouterLink>
+                            </template>
+                        </NotifyBar>
 
                         <div
                             v-if="props.id && surveyStore.loading"
