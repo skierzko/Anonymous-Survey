@@ -27,6 +27,7 @@ export const useSurveyStore = defineStore('survey', {
             }
         },
         async fetchSurveyByUserAndSurveyId(surveyId: number) {
+            this.isDeleted = false;
             this.loading = true;
             this.error = null;
 
