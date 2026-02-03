@@ -135,6 +135,10 @@ const save = async (): Promise<void> => {
         autoClose: 1000,
     });
 
+    if (props.id) {
+        return;
+    }
+
     setTimeout(() => {  
         // router.push('/survey/' + surveyStore.surveys[0].id); // Spa reload
         window.location.href = `/survey/${surveyStore.surveys[0].id}`; // Full reload
