@@ -6,6 +6,9 @@ export const useSurveyStore = defineStore('survey', {
     state: () => ({
         surveys: [] as Survey[],
         loading: false,
+        saving: false,
+        deleting: false,
+        isDeleted: false,
         error: null as string | null,
     }),
 
@@ -36,5 +39,31 @@ export const useSurveyStore = defineStore('survey', {
                 this.loading = false;
             }
         },
+        async saveSurvey(survey: Survey) {
+            this.saving = true;
+            this.error = null;
+
+            try {
+                await api.post('/survey/save', survey);
+            } catch (e: any) {
+                this.error = e.message;
+            } finally {
+                this.saving = false;
+            }
+        },
+        async deleteSurvey(surveyId: number) {
+            this.deleting = true;
+            this.error = null;
+
+            try {
+                await api.delete('/survey/' + surveyId);
+                this.surveys = this.surveys.filter(survey => survey.id !== surveyId);
+                this.isDeleted = true;
+            } catch (e: any) {
+                this.error = e.message;
+            } finally {
+                this.deleting = false;
+            }
+        }
     },
 });

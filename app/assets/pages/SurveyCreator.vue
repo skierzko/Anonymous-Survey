@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, provide, onMounted, watch } from 'vue';
-import axios from 'axios';
 import Btn from '../components/Btn.vue';
 import UserBoardLayout from './layout/UserBoardLayout.vue';
 import { User } from '../types/User';
 import { SURVEY_COMPONENT_MAP, SurveyComponentsKeys } from '../types/SurveyComponentMap';
-import { TriangleAlert, Globe } from 'lucide-vue-next';
+import { TriangleAlert, Globe, Trash2 } from 'lucide-vue-next';
 import InputText from '../components/InputText.vue';
 import OnOff from '../components/OnOff.vue';
 import Pill from '../components/Pill.vue';
@@ -17,8 +16,11 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import { useSurveyStore } from '../stores/survey';
 import dayjs from 'dayjs';
+import { useRouter } from 'vue-router';
+import Confirm from '../components/Confirm.vue';
 
 const surveyStore = useSurveyStore();
+const router = useRouter();
 
 const props = defineProps<{
     csrfToken: string,
@@ -39,8 +41,15 @@ onMounted(async () => {
     }
 
     await surveyStore.fetchSurveyByUserAndSurveyId(props.id);
-    console.log(surveyStore.surveys);
+
     if (surveyStore.surveys.length !== 1) {
+        toast.error('Survey not found', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 2500,
+        });
+
+        router.push('/user-board');
+
         return;
     }
     
@@ -112,7 +121,7 @@ const save = async (): Promise<void> => {
         return;
     }
 
-    await axios.post('/survey/save', survey.value);
+    surveyStore.saveSurvey(survey.value);
 }
 
 const surveyQuestionsHandles: SurveyQuestionHandle[] = [];
@@ -168,6 +177,39 @@ const isTitleError = (): boolean => {
 const isPasswordError = (): boolean => {
     return survey.value.passwordRequired && survey.value.password.trim().length < 6;
 }
+
+watch(() => survey.value.isPublic, (newValue) => {
+    if (newValue) {
+        survey.value.draft = false;
+    }
+});
+
+watch(() => survey.value.draft, (newValue) => {
+    if (newValue) {
+        survey.value.isPublic = false;
+    }
+});
+
+const refs = {
+    confirm: ref<InstanceType<typeof Confirm>>(),
+};
+
+const deleteSurvey = async (): Promise<void> => {
+    if (! props.id) {
+        return;
+    }
+
+    await surveyStore.deleteSurvey(props.id)
+
+    toast.success('Survey deleted successfully', {
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 2500,
+    });
+
+    setTimeout(() => {
+        router.push('/user-board');
+    }, 2500);
+}
 </script>
 
 <template>
@@ -178,7 +220,15 @@ const isPasswordError = (): boolean => {
             </div>
         </template>
         <template v-slot:default>
-            <section class="p-6 py-20 border-t-2 bg-gray-200">
+            <section v-if="surveyStore.isDeleted" class="p-6 py-20 border-t-2 bg-gray-200">
+                <div class="text-center text-xl text-gray-500">
+                    <p>Survey has been deleted.</p>
+                    <p>
+                        Go to <router-link to="/user-board" class="text-blue-600 underline">your dashboard</router-link> to manage your surveys.
+                    </p>
+                </div>
+            </section>
+            <section v-else class="p-6 py-20 border-t-2 bg-gray-200">
                 <div class="md:flex gap-4">
                     <div>
                         <div class="sticky top-1">
@@ -190,13 +240,13 @@ const isPasswordError = (): boolean => {
                                     :error="errors?.title ? 'The field cannot remain empty' : ''"
                                 />
                                 <OnOff v-model="survey.draft" label="Draft" />
-                                <OnOff v-model="survey.passwordRequired" label="Password required" />
                                 <OnOff v-model="survey.isPublic">
                                     <div class="flex gap-2 items-center">
                                         Make public
                                         <Globe class="inline" :size="18" :stroke-width="1.3" />
                                     </div>
                                 </OnOff>
+                                <OnOff v-model="survey.passwordRequired" label="Password required" />
                                 <InputText
                                     v-if="survey.passwordRequired"
                                     v-model="survey.password"
@@ -211,8 +261,15 @@ const isPasswordError = (): boolean => {
                                     </div>
                                 </Btn>
                                 <Btn type="success" class="w-full" @click="save">
-                                    {{ props.id ? 'Update the survey' : 'Create the survey' }}
+                                    <div v-if="surveyStore.saving" class="flex items-center">
+                                        <div class="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-4 h-4"></div>
+                                        Saving...
+                                    </div>
+                                    <div v-else>
+                                        {{ props.id ? 'Update the survey' : 'Create the survey' }}
+                                    </div>
                                 </Btn>
+
                                 <Separator class="pt-6" fullVisibility :clickable="false">Details</Separator>
                                 <p class="flex gap-2 items-center text-sm text-gray-600">
                                     Created questions:
@@ -231,6 +288,38 @@ const isPasswordError = (): boolean => {
                                     Publicated:
                                     {{ dayjs(survey.publicAt).format('YYYY-MM-DD HH:mm') }}
                                 </p>
+
+                                <Confirm v-if="props.id"class="w-full">
+                                    <template #default="{ showConfirm }">
+                                        <div class="flex justify-center">
+                                            <Btn
+                                                v-if="props.id"
+                                                type="link"
+                                                class="text-center text-red-700"
+                                                @click="showConfirm()"
+                                            >
+                                                <div>
+                                                    <Trash2 class="inline" />
+                                                    Delete survey
+                                                </div>
+                                            </Btn>
+                                        </div>
+                                    </template>
+                                    <template #confirm>
+                                        <div class="flex justify-center">
+                                            <Btn
+                                                type="link"
+                                                class="flex! gap-1 items-center text-red-700"
+                                                @click="deleteSurvey()"
+                                            >
+                                                <Trash2 />
+                                                <div>
+                                                    Click to delete
+                                                </div>
+                                            </Btn>
+                                        </div>
+                                    </template>
+                                </Confirm>
                                 
                                 <!-- 
                                 <Btn type="primary" @click="addQuestion(surveyOptions.length, 'dropdown-options')">Dropdown options</Btn>
