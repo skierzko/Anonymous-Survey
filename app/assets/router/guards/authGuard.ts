@@ -1,6 +1,6 @@
 import { useAuthStore } from "../../stores/auth"
 
-export async function authGuard(to) {
+export async function authGuard(to: any) {
   const auth = useAuthStore()
 
   if (!auth.user && !auth.loading) {
@@ -16,7 +16,7 @@ export async function authGuard(to) {
   }
 
   if (to.meta.roles) {
-    const hasRole = to.meta.roles.some(role => auth.user?.roles.includes(role))
+    const hasRole = to.meta.roles.some((role: any) => auth.user?.roles.includes(role))
     if (!hasRole) {
       return '/403'
     }
