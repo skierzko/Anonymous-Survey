@@ -40,6 +40,20 @@ export const useSurveyStore = defineStore('survey', {
                 this.loading = false;
             }
         },
+        async fetchSurveyBySlug(slug: string) {
+            this.loading = true;
+            this.error = null;
+            console.log('Fetching survey with slug:', slug);
+
+            try {
+                const { data } = await api.get('/survey/slug/' + slug);
+                this.surveys = data;
+            } catch (e: any) {
+                this.error = e.message;
+            } finally {
+                this.loading = false;
+            }
+        },
         async saveSurvey(survey: Survey) {
             this.saving = true;
             this.error = null;
