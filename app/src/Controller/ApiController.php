@@ -66,6 +66,26 @@ class ApiController extends AbstractController
         );
     }
 
+    #[Route('/survey/slug/{slug}', name: 'survey_by_slug', methods: ['GET'])]
+    public function surveysByUserAndSlug(
+        #[CurrentUser] ?User $user,
+        SurveyRepository $surveyRepository,
+        string $slug,
+    ): JsonResponse {
+        $survey = $surveyRepository->findBy([
+            'slug' => $slug,
+            'deletedAt' => null,
+            'isPublic' => true,
+            ]);
+
+        return $this->json(
+            $survey,
+            status: 200,
+            headers: [],
+            context: ['groups' => ['user:show']]
+        );
+    }
+
     #[Route('/survey/save', name: 'save', methods: ['POST'])]
     public function save(
         #[CurrentUser]
