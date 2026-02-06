@@ -2,6 +2,7 @@ import { SurveyQuestionOption } from "./SurveyQuestionOption";
 
 export interface SurveyQuestion {
     id?: number,
+    uuid: string,
     surveyId?: number,
 
     type: string,

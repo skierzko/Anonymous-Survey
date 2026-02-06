@@ -10,6 +10,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Uid\Uuid;
 
 class SurveyService
 {
@@ -72,6 +73,7 @@ class SurveyService
                 unset($existingQuestions[$questionData['id']]);
             } else {
                 $question = new SurveyQuestion();
+                $question->setUuid(Uuid::v4()->toHex());
             }
 
             $question->setSurvey($survey)
@@ -110,6 +112,7 @@ class SurveyService
                 unset($existingOptions[$optionData['id']]);
             } else {
                 $option = new SurveyQuestionOption();
+                $option->setUuid(Uuid::v4()->toHex());
             }
 
             $option->setQuestion($question)

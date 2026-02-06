@@ -24,16 +24,20 @@ class SurveyQuestion
     #[ORM\JoinColumn(nullable: false)]
     private ?Survey $survey = null;
 
+    #[ORM\Column(length: 32, unique: true)]
+    #[Groups(['user:show'])]
+    private string $uuid;
+
     #[ORM\Column(length: 50)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private string $type;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private string $title;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private bool $visible = true;
 
     #[ORM\Column]
@@ -45,15 +49,15 @@ class SurveyQuestion
     private int $maxOptionsLimit = 0;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private bool $draft = false;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private bool $required = false;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private bool $optional = false;
 
     #[ORM\Column]
@@ -67,7 +71,7 @@ class SurveyQuestion
         orphanRemoval: true
     )]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private Collection $options;
 
     #[ORM\Column(type: Types::JSON)]
@@ -108,6 +112,17 @@ class SurveyQuestion
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(string $uuid): self
+    {
+        $this->uuid = $uuid;
+        return $this;
     }
 
     public function setSurvey(?Survey $survey): self

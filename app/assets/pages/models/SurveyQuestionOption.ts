@@ -1,5 +1,6 @@
 export interface SurveyQuestionOption {
     id?: number,
+    uuid: string,
     surveyQuestionId?:number,
 
     title: string,

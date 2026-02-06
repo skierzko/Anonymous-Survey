@@ -7,6 +7,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class OptionDto
 {
     public ?int $id = null;
+
+    #[Assert\NotBlank]
+    #[Assert\Length(exactly: 32)]
+    public string $uuid;
     
     #[Assert\NotBlank]
     public string $title;

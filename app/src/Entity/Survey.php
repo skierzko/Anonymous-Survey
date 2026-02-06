@@ -24,7 +24,7 @@ class Survey
     private ?int $userId = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private string $title;
 
     #[ORM\Column]
@@ -36,7 +36,7 @@ class Survey
     private string $slug;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private bool $passwordRequired = false;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -50,7 +50,7 @@ class Survey
         orphanRemoval: true
     )]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private Collection $questions;
 
     #[ORM\Column(type: Types::JSON)]
@@ -58,7 +58,7 @@ class Survey
     private array $extraOptions = [];
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private bool $isPublic = false;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]

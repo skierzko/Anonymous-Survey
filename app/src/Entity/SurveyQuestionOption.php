@@ -22,12 +22,16 @@ class SurveyQuestionOption
     #[ORM\JoinColumn(nullable: false)]
     private ?SurveyQuestion $question = null;
 
+    #[ORM\Column(length: 32, unique: true)]
+    #[Groups(['user:show'])]
+    private string $uuid;
+
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private string $title;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private bool $visible = true;
 
     #[ORM\Column]
@@ -63,6 +67,17 @@ class SurveyQuestionOption
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    public function setUuid(string $uuid): self
+    {
+        $this->uuid = $uuid;
+        return $this;
     }
 
     public function setQuestion(?SurveyQuestion $question): self
