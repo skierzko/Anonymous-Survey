@@ -33,10 +33,10 @@ onMounted(() => {
                 </div>
 
                 <div v-else-if="surveyStore.surveys[0]?.isPublic === false || surveyStore.surveys.length === 0" class="text-center text-xl text-gray-500">
-                    This survey is not public.  Please contact the survey creator for more information.
+                    This survey is not public. Please contact the survey creator for more information.
                 </div>
 
-                <template v-else>{{ surveyStore.surveys[0]?.isPublic }}
+                <template v-else>
                     <div class="grid gap-4 grid-cols-1">
                         <template v-for="(surveyQuestion, index) in surveyStore.surveys[0]?.questions" :key="'query-' + index">
                             <component
