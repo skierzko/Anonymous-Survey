@@ -6,6 +6,7 @@ import Login from '../pages/Login.vue'
 import Register from '../pages/Register.vue'
 import UserBoard from '../pages/UserBoard.vue'
 import SurveyCreator from '../pages/SurveyCreator.vue'
+import SurveyPresentation from '../pages/SurveyPresentation.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -58,6 +59,17 @@ const routes: RouteRecordRaw[] = [
         }),
         meta: {
             requiresAuth: true,
+        },
+    },
+    {
+        path: '/survey/show/:slug',
+        name: 'SurveyPresentation',
+        component: SurveyPresentation,
+        props: route => ({
+            slug: route.params.slug as string
+        }),
+        meta: {
+            requiresAuth: false,
         },
     }
 ]
