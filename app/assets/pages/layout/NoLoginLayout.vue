@@ -6,10 +6,22 @@ import TopBar from './sections/TopBar.vue';
 import PresentationSection from './sections/PresentationSection.vue';
 import { useAuthStore } from '../../stores/auth';
 
+interface Props {
+    loadUserData?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    loadUserData: true,
+});
+
 const auth = useAuthStore();
 
 onMounted(async () => {
-  if (!auth.user && !auth.loading) {
+  if (
+      props.loadUserData
+      && !auth.user
+      && !auth.loading
+  ) {
     await auth.fetchUser()
   }
 })
