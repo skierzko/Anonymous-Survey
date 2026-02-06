@@ -12,7 +12,10 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
 </script>
 
 <template>
-    <div class="flex items-center mt-4 sm:mt-0 mb-4 p-2 border-1 border-gray-400 bg-gray-100 rounded-sm">
+    <div
+        class="flex items-center mt-4 sm:mt-0 mb-4 p-2 border-1 border-gray-400 bg-gray-100 rounded-sm"
+        :class="[survey.isPublic && 'border-b-2 border-green-600']"
+    >
         <div class="flex-1">
             <div class="flex">
                 <div class="flex-1">
@@ -48,7 +51,7 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
                     <b>Slug: </b>
                     {{ survey.slug }}
                 </div>
-                <OnlineDot :offline="survey.publicAt === undefined" />
+                <OnlineDot :offline="survey.isPublic === false" />
                 <div class="px-1 text-xs text-gray-600" :class="[! survey.publicAt && 'opacity-50']">
                     <b>Public at: </b>
                     {{ publicAt ?? 'unpublished'}}
@@ -56,7 +59,7 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
             </div>
         </div>
         <div>
-            <Btn type="ghost" class="m-0! p-0!">
+            <Btn type="ghost" class="m-0! p-0! hover:scale-150!">
                 <RouterLink :to="'/survey/' + survey.id">
                     <ChevronRight :size="20" />
                 </RouterLink>
