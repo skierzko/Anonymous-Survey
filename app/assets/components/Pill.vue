@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from "vue";
 
-type Variant = "default" | "primary" | "success" | "warning" | "danger";
-type Size = "sm" | "md" | "lg";
+type Variant = 'default' | 'primary' | 'danger' | 'success' | 'warning' | 'info' | 'light' | 'dark' | 'link' | 'text' | 'ghost' | 'outline';
+type Size = 'xs' | 'sm' | 'md' | 'lg';
 
 interface Props {
     variant?: Variant;
@@ -10,8 +10,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    variant: "default",
-    size: "md",
+    variant: 'default',
+    size: 'md',
 });
 
 const baseClasses = "inline-flex items-center rounded-xl font-medium select-none";
@@ -19,12 +19,20 @@ const baseClasses = "inline-flex items-center rounded-xl font-medium select-none
 const variantClasses: Record<Variant, string> = {
     default: "bg-gray-100 text-gray-700",
     primary: "bg-blue-100 text-blue-700",
+    danger: "bg-red-100 text-red-700",
     success: "bg-green-100 text-green-700",
     warning: "bg-yellow-100 text-yellow-800",
-    danger: "bg-red-100 text-red-700",
+    info: "bg-cyan-100 text-cyan-700",
+    light: "bg-gray-50 text-gray-500",
+    dark: "bg-gray-800 text-white",
+    link: "bg-transparent text-blue-600 underline",
+    text: "bg-transparent text-gray-700",
+    ghost: "bg-transparent text-gray-700 hover:bg-gray-100",
+    outline: "bg-transparent text-gray-700 border border-gray-300",
 };
 
 const sizeClasses: Record<Size, string> = {
+    xs: "text-xs px-2 py-0",
     sm: "text-xs px-2 py-0.5",
     md: "text-sm px-3 py-0.5",
     lg: "text-sm px-4 py-0.5",
