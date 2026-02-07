@@ -1,12 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { SurveyQuestion } from '../../models/SurveyQuestion';
 import Pill from '../../../components/Pill.vue';
-
-const currentOptions = new Map<number, string>();
+import InputTextarea from '../../../components/InputTextarea.vue';
 
 const props = defineProps<{
     question: SurveyQuestion,
 }>()
+
+const text = ref<string>('');
 </script>
 
 <template>
@@ -21,16 +23,7 @@ const props = defineProps<{
         </Pill>
         <div class="grid gap-2 p-2 select-none">
             {{ question.title }}
-            <div v-for="(option, index) in question.options" :key="option.id" class="ml-6">
-                <input
-                    type="checkbox"
-                    class="cursor-pointer"
-                    :id="option.uuid"
-                    :name="question.uuid"
-                    :value="option.uuid"
-                    v-model="currentOptions"
-                    /> <label :for="option.uuid" class="ml-2 cursor-pointer" >{{ option.title }}</label>
-            </div>
+            <InputTextarea v-model="text" placeholder="Write your answer here..."></InputTextarea>
         </div>
     </div>
 </template>

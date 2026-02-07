@@ -3,8 +3,11 @@ import RadioQuestionSurvey from '../pages/surveyOptions/radioQuestion/RadioQuest
 import RadioQuestionShow from '../pages/surveyOptions/radioQuestion/RadioQuestionShow.vue';
 import ChangeQueryType from '../pages/surveyOptions/changeQueryType/ChangeQueryType.vue';
 import CheckboxQuestionSurvey from '../pages/surveyOptions/checkboxQuestion/CheckboxQuestion.vue';
+import CheckboxQuestionShow from '../pages/surveyOptions/checkboxQuestion/CheckboxQuestionShow.vue';
 import OpenQuestion from '../pages/surveyOptions/openQuestion/OpenQuestion.vue';
+import OpenQuestionShow from '../pages/surveyOptions/openQuestion/OpenQuestionShow.vue';
 import RatingScaleQuestion from '../pages/surveyOptions/ratingScaleQuestion/RatingScaleQuestion.vue';
+import RatingScaleQuestionShow from '../pages/surveyOptions/ratingScaleQuestion/RatingScaleQuestionShow.vue';
 import DateRangeQuestion from '../pages/surveyOptions/dateRangeQuestion/DateRangeQuestion.vue';
 
 interface Details {
@@ -29,19 +32,19 @@ export const SURVEY_COMPONENT_MAP: Record<string, Details> = {
     },
     checkbox_question_survey: {
         c: CheckboxQuestionSurvey,
-        s: null,
+        s: CheckboxQuestionShow,
         name: 'Multi choice',
         visible: true,
     },
     open_question_survey: {
         c: OpenQuestion,
-        s: null,
+        s: OpenQuestionShow,
         name: 'Open question',
         visible: true,
     },
     rating_scale_question_survey: {
         c: RatingScaleQuestion,
-        s: null,
+        s: RatingScaleQuestionShow,
         name: 'Rating scale',
         visible: true,
     },
