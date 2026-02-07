@@ -68,6 +68,7 @@ const addQuestion = (index: number, type?: SurveyComponentsKeys) => {
     }
 
     survey.value.questions.splice(index, 0, {
+        uuid: '',
         type: type ?? 'change_query_type',
         title: '',
         visible: true,
@@ -356,7 +357,7 @@ const linkToSurvey = () => {
                     <div class="flex-1 mt-16 md:mt-0">
                         <div class="text-xl mb-4">Survey questions</div>
 
-                        <NotifyBar v-if="survey.isPublic && survey.id">
+                        <NotifyBar v-if="survey.isPublic && survey.id" class="mb-4">
                             <template #icon>
                                 <ExternalLink />
                             </template>
@@ -365,7 +366,7 @@ const linkToSurvey = () => {
                                 <RouterLink
                                     :to="`/survey/show/${survey.slug}`"
                                     class="ml-1 text-blue-600 underline"
-                                >
+                                > 
                                     {{ linkToSurvey() }}
                                 </RouterLink>
                             </template>
