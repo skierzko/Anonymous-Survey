@@ -3,6 +3,7 @@ import { onMounted } from 'vue';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
 import { useSurveyStore } from '../stores/survey';
 import { SURVEY_COMPONENT_MAP } from '../types/SurveyComponentMap';
+import NotifyBar from '../components/NotifyBar.vue';
 
 const surveyStore = useSurveyStore();
 
@@ -40,10 +41,13 @@ onMounted(() => {
                     <div class="grid gap-4 grid-cols-1">
                         <template v-for="(surveyQuestion, index) in surveyStore.surveys[0]?.questions" :key="'query-' + index">
                             <component
-                                v-if="SURVEY_COMPONENT_MAP[surveyQuestion.type].s !== null"
+                                v-if="SURVEY_COMPONENT_MAP[surveyQuestion.type].s !== null && surveyQuestion.visible && surveyQuestion.draft === false"
                                 :is="SURVEY_COMPONENT_MAP[surveyQuestion.type].s"
                                 :question="surveyQuestion"
                             />
+                            <NotifyBar v-else-if="surveyQuestion.visible && surveyQuestion.draft === false">
+                                Commponent not found for question type: {{ surveyQuestion.type }}
+                            </NotifyBar>
                         </template>
                     </div>
                 </template>
