@@ -41,11 +41,11 @@ class SurveyQuestion
     private bool $visible = true;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private int $minOptionsLimit = 0;
 
     #[ORM\Column]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private int $maxOptionsLimit = 0;
 
     #[ORM\Column]
