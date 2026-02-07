@@ -73,7 +73,7 @@ class SurveyService
                 unset($existingQuestions[$questionData['id']]);
             } else {
                 $question = new SurveyQuestion();
-                $question->setUuid(Uuid::v4()->toHex());
+                $question->setUuid($this->htmlSafeHexId());
             }
 
             $question->setSurvey($survey)
@@ -112,7 +112,7 @@ class SurveyService
                 unset($existingOptions[$optionData['id']]);
             } else {
                 $option = new SurveyQuestionOption();
-                $option->setUuid(Uuid::v4()->toHex());
+                $option->setUuid($this->htmlSafeHexId());
             }
 
             $option->setQuestion($question)
@@ -137,5 +137,18 @@ class SurveyService
     private function generateSlug(): string
     {
         return strtolower(Ulid::generate());
+    }
+
+    function htmlSafeHexId(): string
+    {
+        $hex = Uuid::v4()->toHex();
+
+        if (is_numeric($hex[0])) {
+            $hex[0] = random_int(0, 1)
+                ? chr(random_int(65, 90))
+                : chr(random_int(97, 122));
+        }
+
+        return $hex;
     }
 }
