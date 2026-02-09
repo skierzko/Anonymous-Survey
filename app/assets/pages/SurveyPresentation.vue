@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, provide, onMounted } from 'vue';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
 import { useSurveyStore } from '../stores/survey';
 import { SURVEY_COMPONENT_MAP } from '../types/SurveyComponentMap';
 import NotifyBar from '../components/NotifyBar.vue';
+import type { SurveyQuestionHandle, SurveyQuestionRegistry } from './registers/SurveyQuestionRegistry';
+import Btn from '../components/Btn.vue';
+import { toast } from 'vue3-toastify';
 
 const surveyStore = useSurveyStore();
+const isReadyToSave = ref<boolean>(false);
 
 const props = defineProps<{
     slug: string | null;
@@ -14,6 +18,54 @@ const props = defineProps<{
 onMounted(() => {
     surveyStore.fetchSurveyBySlug(props.slug!);
 });
+
+const surveyQuestionsHandles: SurveyQuestionHandle[] = [];
+const surveyQuestionRegisters: SurveyQuestionRegistry = {
+    register(handle) {
+        surveyQuestionsHandles.push(handle)
+    },
+    unregister(handle) {
+        const index = surveyQuestionsHandles.indexOf(handle)
+        if (index !== -1) {
+            surveyQuestionsHandles.splice(index, 1)
+        }
+    },
+}
+
+provide('survey-question-registry', surveyQuestionRegisters)
+
+const  send = () => {
+    if (! validateAllData()) {
+        toast.error('Survey is not ready to be sent', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 2500,
+        });
+
+        return;
+    }
+
+    toast.success('Survey sent successfully', {
+            position: toast.POSITION.TOP_RIGHT,
+            autoClose: 2500,
+        });
+}
+
+const validateAllData = (): boolean => {
+    if (surveyQuestionsHandles.length === 0) {
+        return false;
+    }
+
+    let isValid = true
+    for (const h of surveyQuestionsHandles) {
+        if (!h.valid()) {
+            isValid = false
+        }
+    }
+
+    isReadyToSave.value = isValid;
+
+    return isValid;
+}
 </script>
 
 <template>
@@ -49,6 +101,12 @@ onMounted(() => {
                                 Commponent not found for question type: {{ surveyQuestion.type }}
                             </NotifyBar>
                         </template>
+                        <div class="flex justify-end mt-4">
+                            <Btn variant="primary" @click="send()">
+                                Send survey
+                            </Btn>
+                            
+                        </div>
                     </div>
                 </template>
             </section>
