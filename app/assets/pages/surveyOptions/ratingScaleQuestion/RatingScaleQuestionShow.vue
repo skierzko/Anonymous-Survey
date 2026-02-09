@@ -24,7 +24,7 @@ const props = defineProps<{
             <div
                 v-for="(option, index) in question.options"
                 :key="option.id"
-                class="grid gap-2 ml-6"
+                class="sm:grid gap-2 ml-6"
                 :style="`grid-template-columns: repeat(${question.maxOptionsLimit - question.minOptionsLimit + 2}, minmax(0, 1fr))`"
 
             >
