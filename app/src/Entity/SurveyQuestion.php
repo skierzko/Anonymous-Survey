@@ -75,7 +75,7 @@ class SurveyQuestion
     private Collection $options;
 
     #[ORM\Column(type: Types::JSON)]
-    #[Groups(['user:read'])]
+    #[Groups(['user:read', 'user:show'])]
     private array $extraOptions = [];
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
