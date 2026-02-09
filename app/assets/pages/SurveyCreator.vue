@@ -281,13 +281,13 @@ const linkToSurvey = () => {
                                     label="Password:"
                                     :error="errors?.password ? 'Enter at least 6 characters' : ''"
                                 />
-                                <Btn v-if="false" type="dark" @click="validateAllData">
+                                <Btn v-if="false" variant="dark" @click="validateAllData">
                                     <div class="flex items-center">
                                         <div class="flex-1">Check the form</div>
                                         <div class="text-xs">{{ isReadyToSave ? 'PASSED' : 'REJECTED' }}</div>
                                     </div>
                                 </Btn>
-                                <Btn type="success" class="w-full" @click="save">
+                                <Btn variant="success" class="w-full" @click="save">
                                     <div v-if="surveyStore.saving" class="flex items-center">
                                         <div class="animate-spin mr-2 border-2 border-white border-t-transparent rounded-full w-4 h-4"></div>
                                         Saving...
@@ -321,7 +321,7 @@ const linkToSurvey = () => {
                                         <div class="flex justify-center">
                                             <Btn
                                                 v-if="props.id"
-                                                type="link"
+                                                variant="link"
                                                 class="text-center text-red-700"
                                                 @click="showConfirm()"
                                             >
@@ -335,7 +335,7 @@ const linkToSurvey = () => {
                                     <template #confirm>
                                         <div class="flex justify-center">
                                             <Btn
-                                                type="link"
+                                                variant="link"
                                                 class="flex! gap-1 items-center text-red-700"
                                                 @click="deleteSurvey()"
                                             >
@@ -349,8 +349,8 @@ const linkToSurvey = () => {
                                 </Confirm>
                                 
                                 <!-- 
-                                <Btn type="primary" @click="addQuestion(surveyOptions.length, 'dropdown-options')">Dropdown options</Btn>
-                                <Btn type="primary" @click="addQuestion(surveyOptions.length, 'date-choice')">Date choice</Btn> -->
+                                <Btn variant="primary" @click="addQuestion(surveyOptions.length, 'dropdown-options')">Dropdown options</Btn>
+                                <Btn variant="primary" @click="addQuestion(surveyOptions.length, 'date-choice')">Date choice</Btn> -->
                             </div>
                         </div>
                     </div>

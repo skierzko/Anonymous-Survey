@@ -69,7 +69,7 @@ const register = async () => {
             <section class="p-6 py-20 border-t-2 bg-white">
                 <div class="mb-8 sm:flex">
                     <div class="flex-1 text-3xl">Register</div>
-                    <div>You have an account? <RouterLink to="/login"><Btn type="link" class="p-0! m-0!">Log in!</Btn></RouterLink></div>
+                    <div>You have an account? <RouterLink to="/login"><Btn variant="link" class="p-0! m-0!">Log in!</Btn></RouterLink></div>
                 </div>
                 
                 <div>
@@ -100,7 +100,7 @@ const register = async () => {
                             <input v-model="form.confirmPassword" type="password" id="confirm-password" class="w-full px-3 py-2 border rounded" required>
                             <div v-if="errors.second" class="text-red-700 text-sm">{{ errors.second }}</div>
                         </div>
-                        <Btn type="primary" @click="register">
+                        <Btn variant="primary" @click="register">
                             {{ sending ? 'Sending...' : 'Register' }}
                         </Btn>
                     </form>

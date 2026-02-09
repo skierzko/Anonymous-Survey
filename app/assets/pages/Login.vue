@@ -77,7 +77,7 @@ const login = async (): Promise<void> => {
             <section class="p-6 py-20 border-t-2 bg-white">
                 <div class="mb-8 sm:flex">
                     <h2 class="flex-1 text-3xl">Login</h2>
-                    <span>Don't have an account yet? <RouterLink to="/register"><Btn type="link" class="p-0! m-0!">Join us!</Btn></RouterLink></span>
+                    <span>Don't have an account yet? <RouterLink to="/register"><Btn variant="link" class="p-0! m-0!">Join us!</Btn></RouterLink></span>
                 </div>
 
                 <div>
@@ -94,7 +94,7 @@ const login = async (): Promise<void> => {
                             <label for="password" class="block text-gray-700 mb-2">Password:</label>
                             <input v-model="form.password" type="password" id="password" class="w-full px-3 py-2 border rounded" required @keyup.enter="login">
                         </div>
-                        <Btn type="primary" @click="login">
+                        <Btn variant="primary" @click="login">
                             {{ sending ? 'Sending...' : 'Login' }}
                         </Btn>
                     </form>

@@ -70,7 +70,7 @@ onUnmounted(() => {
             <Eye v-if="option.visible" :size="20" :stroke-width="1.3" @click="toggleVisibility" />
             <EyeOff v-else :size="20" :stroke-width="1.3" @click="toggleVisibility" />
         </Btn>
-        <Btn type="danger" class="p-1!" @click="emit('remove', index)">
+        <Btn variant="danger" class="p-1!" @click="emit('remove', index)">
             <Trash2 :size="20" :stroke-width="1.3" />
         </Btn>
     </div>

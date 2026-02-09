@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { watch } from 'vue';
 import { SurveyQuestionOption } from '../../models/SurveyQuestionOption';
 import { CirclePlus } from 'lucide-vue-next';
 import RadioQuestionOption from './RadioQuestionOption.vue';
@@ -12,6 +11,7 @@ const props = defineProps<{
 const addOption = (index: number) => {
     props.options.splice(index, 0, {
         id: undefined,
+        uuid: '',
         title: '',
         visible: true,
         position: index,

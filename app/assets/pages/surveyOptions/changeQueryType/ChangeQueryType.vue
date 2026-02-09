@@ -55,7 +55,7 @@ onMounted(() => {
                 {{ surveyComponent.name }}
             </Btn>
         </template>
-        <Btn type="danger" @click="emit('remove', index)">
+        <Btn variant="danger" @click="emit('remove', index)">
             <Trash2 :size="20" :stroke-width="1.3" />
         </Btn>
     </div>

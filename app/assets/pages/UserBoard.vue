@@ -33,7 +33,7 @@ const props = defineProps<{
                 >
                     <div class="sm:w-[200px]">
                         <RouterLink to="/survey-creator">
-                            <Btn type="success">
+                            <Btn variant="success">
                                 <DiamondPlus class="inline-block" />
                                 Add survey
                             </Btn>

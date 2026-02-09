@@ -26,7 +26,7 @@ const logout =  async () => {
         <div class="flex-1 text-xl">
             
             <RouterLink to="/">
-                <Btn type="text">Anonymous Survey</Btn>
+                <Btn variant="text">Anonymous Survey</Btn>
             </RouterLink>
         </div>
         <div class="grid grid-cols-2 gap-1">

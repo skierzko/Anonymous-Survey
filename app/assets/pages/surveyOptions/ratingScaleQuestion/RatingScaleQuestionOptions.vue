@@ -11,6 +11,7 @@ const props = defineProps<{
 const addOption = (index: number) => {
     props.options.splice(index, 0, {
         id: undefined,
+        uuid: '',
         title: '',
         visible: true,
         position: index,

@@ -104,13 +104,13 @@ onMounted(() => {
                 </Btn>
             </div>
             <div>
-                <Btn class="p-1!" :type="question.visible ? 'default' : 'info'">
+                <Btn class="p-1!" :variant="question.visible ? 'default' : 'info'">
                     <Eye v-if="question.visible" :size="20" :stroke-width="1.3" @click="toggleVisibility" />
                     <EyeOff v-else :size="20" :stroke-width="1.3" @click="toggleVisibility" />
                 </Btn>
             </div>
             <div class="ml-6">
-                <Btn type="danger" class="p-1!" @click="emit('remove', index)">
+                <Btn variant="danger" class="p-1!" @click="emit('remove', index)">
                     <Trash2 :size="20" :stroke-width="1.3" />
                 </Btn>
             </div>

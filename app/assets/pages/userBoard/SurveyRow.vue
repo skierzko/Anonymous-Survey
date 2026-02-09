@@ -59,7 +59,7 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
             </div>
         </div>
         <div>
-            <Btn type="ghost" class="m-0! p-0! hover:scale-150!">
+            <Btn variant="ghost" class="m-0! p-0! hover:scale-150!">
                 <RouterLink :to="'/survey/' + survey.id">
                     <ChevronRight :size="20" />
                 </RouterLink>
