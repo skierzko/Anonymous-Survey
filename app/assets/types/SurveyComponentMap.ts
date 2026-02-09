@@ -9,6 +9,7 @@ import OpenQuestionShow from '../pages/surveyOptions/openQuestion/OpenQuestionSh
 import RatingScaleQuestion from '../pages/surveyOptions/ratingScaleQuestion/RatingScaleQuestion.vue';
 import RatingScaleQuestionShow from '../pages/surveyOptions/ratingScaleQuestion/RatingScaleQuestionShow.vue';
 import DateRangeQuestion from '../pages/surveyOptions/dateRangeQuestion/DateRangeQuestion.vue';
+import DateRangeQuestionShow from '../pages/surveyOptions/dateRangeQuestion/DateRangeQuestionShow.vue';
 
 interface Details {
     c: Component,
@@ -50,7 +51,7 @@ export const SURVEY_COMPONENT_MAP: Record<string, Details> = {
     },
     date_range_question_survey: {
         c: DateRangeQuestion,
-        s: null,
+        s: DateRangeQuestionShow,
         name: 'Date range',
         visible: true,
     },
