@@ -51,7 +51,7 @@ const login = async (): Promise<void> => {
         }
     )
     .then((response) => {
-        if (response.data.status === 'ok') {
+        if (response.data.status === true) {
             successful.value = true;
             router.push('/user-board')
             return;
