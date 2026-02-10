@@ -40,7 +40,7 @@ class JsonLoginAuthenticator extends AbstractAuthenticator
         string $firewallName
     ): ?JsonResponse {
         return new JsonResponse([
-            'status' => 'ok',
+            'status' => true,
             'user' => $token->getUser()->getUserIdentifier(),
         ]);
     }
