@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, inject, onMounted } from 'vue';
-import type { SurveyQuestionHandle, SurveyQuestionRegistry } from '../../registers/SurveyQuestionRegistry';
+import type { SurveyQuestionShowHandle, SurveyQuestionShowRegistry } from '../../registers/SurveyQuestionShowRegistry';
 import { SurveyQuestion } from '../../models/SurveyQuestion';
 import Pill from '../../../components/Pill.vue';
 import InputTextarea from '../../../components/InputTextarea.vue';
@@ -14,7 +14,7 @@ const error = ref<string>('');
 
 /** Registry to parent */
 
-const surveyQuestionRegistry = inject<SurveyQuestionRegistry>('survey-question-registry')
+const surveyQuestionRegistry = inject<SurveyQuestionShowRegistry>('survey-question-show-registry')
 if (!surveyQuestionRegistry) {
   throw new Error('survey-question-registry not provided')
 }
@@ -39,7 +39,15 @@ const valid = (): boolean => {
 
     return error.value === '';
 }
-const surveyQuestionHandle: SurveyQuestionHandle = { valid }
+
+const getAnswer = () => {
+    return {
+        uuid: props.question.uuid,
+        value: text.value,
+    };
+}
+
+const surveyQuestionHandle: SurveyQuestionShowHandle = { valid, getAnswer }
 
 onMounted(() => {
     surveyQuestionRegistry.register(surveyQuestionHandle)

@@ -4,12 +4,14 @@ import NoLoginLayout from './layout/NoLoginLayout.vue';
 import { useSurveyStore } from '../stores/survey';
 import { SURVEY_COMPONENT_MAP } from '../types/SurveyComponentMap';
 import NotifyBar from '../components/NotifyBar.vue';
-import type { SurveyQuestionHandle, SurveyQuestionRegistry } from './registers/SurveyQuestionRegistry';
+import type { SurveyQuestionShowHandle, SurveyQuestionShowRegistry } from './registers/SurveyQuestionShowRegistry';
 import Btn from '../components/Btn.vue';
 import { toast } from 'vue3-toastify';
+import { api } from './services/api';
 
 const surveyStore = useSurveyStore();
 const isReadyToSave = ref<boolean>(false);
+const isSended = ref<boolean>(false);
 
 const props = defineProps<{
     slug: string | null;
@@ -19,8 +21,8 @@ onMounted(() => {
     surveyStore.fetchSurveyBySlug(props.slug!);
 });
 
-const surveyQuestionsHandles: SurveyQuestionHandle[] = [];
-const surveyQuestionRegisters: SurveyQuestionRegistry = {
+const surveyQuestionsHandles: SurveyQuestionShowHandle[] = [];
+const surveyQuestionRegisters: SurveyQuestionShowRegistry = {
     register(handle) {
         surveyQuestionsHandles.push(handle)
     },
@@ -32,9 +34,9 @@ const surveyQuestionRegisters: SurveyQuestionRegistry = {
     },
 }
 
-provide('survey-question-registry', surveyQuestionRegisters)
+provide('survey-question-show-registry', surveyQuestionRegisters)
 
-const  send = () => {
+const  send = async () => {
     if (! validateAllData()) {
         toast.error('Survey is not ready to be sent', {
             position: toast.POSITION.TOP_RIGHT,
@@ -44,10 +46,16 @@ const  send = () => {
         return;
     }
 
+    console.log(surveyQuestionsHandles.map(handle => handle.getAnswer()))
+
+    // await api.post(`/survey/${surveyStore.surveys[0]?.id}/submit`, {
+    //     answers: surveyQuestionsHandles.map(handle => handle.getAnswer()),
+    // });
+
     toast.success('Survey sent successfully', {
-            position: toast.POSITION.TOP_RIGHT,
-            autoClose: 2500,
-        });
+        position: toast.POSITION.TOP_RIGHT,
+        autoClose: 2500,
+    });
 }
 
 const validateAllData = (): boolean => {
@@ -83,6 +91,10 @@ const validateAllData = (): boolean => {
                     class="text-center text-xl text-gray-500"
                 >
                     Loading data...
+                </div>
+
+                <div v-else-if="isSended" class="text-center text-xl text-gray-500">
+                    The survey has been sent. Thank you for your participation!
                 </div>
 
                 <div v-else-if="surveyStore.surveys[0]?.isPublic === false || surveyStore.surveys.length === 0" class="text-center text-xl text-gray-500">
