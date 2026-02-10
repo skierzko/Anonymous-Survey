@@ -5,11 +5,14 @@ namespace App\Service;
 use App\Entity\Survey;
 use App\Entity\SurveyQuestion;
 use App\Entity\SurveyQuestionOption;
-use App\Dto\Survey\CreateSurveyRequest;
+use App\Dto\Survey\CreateSurveyDto;
+use App\Dto\Survey\SurveyResultsDto;
+use App\Entity\SurveyResult;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Uid\Uuid;
 
 class SurveyService
@@ -24,12 +27,12 @@ class SurveyService
         $this->user = $this->security->getUser();
     }
 
-    function saveSurvey(CreateSurveyRequest $dto, EntityManagerInterface $em): Survey
+    function saveSurvey(CreateSurveyDto $dto, EntityManagerInterface $em): Survey
     {
         return $this->saveSurveyData($dto, $em);
     }
 
-    private function saveSurveyData(CreateSurveyRequest $dto, EntityManagerInterface $em): Survey
+    private function saveSurveyData(CreateSurveyDto $dto, EntityManagerInterface $em): Survey
     {
         $survey = null;
         if (!empty($dto->id)) {
@@ -57,7 +60,7 @@ class SurveyService
         return $survey;
     }
 
-    private function saveSurveyQuestionsData(Survey $survey, CreateSurveyRequest $dto): void
+    private function saveSurveyQuestionsData(Survey $survey, CreateSurveyDto $dto): void
     {
         $existingQuestions = [];
         foreach ($survey->getQuestions() as $q) {
@@ -150,5 +153,26 @@ class SurveyService
         }
 
         return $hex;
+    }
+
+    function saveResults(
+        EntityManagerInterface $em,
+        SerializerInterface $serializer,
+        Survey $survey,
+        SurveyResultsDto $results
+        ): void
+    {
+        $jsonRequestData = $serializer->serialize($results, 'json');
+        
+
+        $surveyResult = new SurveyResult();
+        $surveyResult->setResults($jsonRequestData)
+            ->setSurvey($survey)
+            ->setCreatedAt($this->now)
+            ->setUpdatedAt($this->now)
+        ;
+
+        $em->persist($surveyResult);
+        $em->flush();
     }
 }

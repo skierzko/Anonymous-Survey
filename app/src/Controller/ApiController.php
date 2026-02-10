@@ -10,8 +10,11 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Repository\SurveyRepository;
-use App\Dto\Survey\CreateSurveyRequest;
+use App\Dto\Survey\CreateSurveyDto;
+use App\Dto\Survey\SurveyResultsDto;
+use App\Entity\Survey;
 use App\Service\SurveyService;
+use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/api', name: 'api_')]
 class ApiController extends AbstractController
@@ -91,14 +94,14 @@ class ApiController extends AbstractController
         #[CurrentUser]
         ?User $user,
         #[MapRequestPayload]
-        CreateSurveyRequest $request,
+        CreateSurveyDto $request,
         SurveyService $surveyService,
         EntityManagerInterface $em
     ): JsonResponse {
         if (!$user) {
             return $this->json([
                 'error' => 'User is not logged.'
-            ], 401);
+            ], 401); 
         }
 
         $survey = $surveyService->saveSurvey($request, $em);
@@ -148,12 +151,39 @@ class ApiController extends AbstractController
 
     #[Route('/survey/show/{slug}', name: 'survey_show', methods: ['POST'], requirements: ['slug' => '.{20,32}'])]
     public function saveSurveyResult(
+        EntityManagerInterface $em,
+        SurveyService $surveyService,
+        SurveyRepository $surveyRepository,
+        SerializerInterface $serializer,
+        #[MapRequestPayload]
+        SurveyResultsDto $request,
         string $slug,
     ): JsonResponse
     {
-        dd('save result', $slug);
+        /** @var Survey|null */
+        $survey = $surveyRepository->findOneBy([
+            'slug' => $slug,
+            'deletedAt' => null,
+            'isPublic' => true
+        ]);
+
+        if (!$survey) {
+            return $this->json([
+                'error' => 'Survey not found.'
+            ], 404);
+        }
+
+        try {
+            $surveyService->saveResults($em, $serializer, $survey, $request);
+        } catch (\Exception $e) {
+            dd($e);
+            return $this->json([
+                'error' => 'Invalid request data.'
+            ], 400);
+        }
+
         return $this->json([
-            'success' => true
+            'status' => true
         ]);
     }
 }

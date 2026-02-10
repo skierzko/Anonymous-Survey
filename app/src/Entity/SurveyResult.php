@@ -25,17 +25,25 @@ class SurveyResult
     #[Groups(['user:read'])]
     private string $results;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Groups(['user:read'])]
     private \DateTimeInterface $createdAt;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Groups(['user:read'])]
     private \DateTimeInterface $updatedAt;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Groups(['user:read'])]
     private ?\DateTimeInterface $deletedAt = null;
+
+    #[ORM\PrePersist]
+    public function onCreate(): void
+    {
+        $now = new \DateTimeImmutable();
+        $this->createdAt = $now;
+        $this->updatedAt = $now;
+    }
 
     public function getId(): ?int
     {

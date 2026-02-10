@@ -46,16 +46,30 @@ const  send = async () => {
         return;
     }
 
-    console.log(surveyQuestionsHandles.map(handle => handle.getAnswer()))
+    await api.post(`/survey/show/${props.slug}`, {
+            answers: surveyQuestionsHandles.map(handle => handle.getAnswer()),
+        })
+        .then((response) => {
+            if (response.data.status) {
+                isSended.value = true;
 
-    // await api.post(`/survey/${surveyStore.surveys[0]?.id}/submit`, {
-    //     answers: surveyQuestionsHandles.map(handle => handle.getAnswer()),
-    // });
-
-    toast.success('Survey sent successfully', {
-        position: toast.POSITION.TOP_RIGHT,
-        autoClose: 2500,
-    });
+                toast.success('Survey sent successfully', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 2500,
+                });
+            } else {
+                toast.error(response.data.error ?? 'Failed to send survey', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 2500,
+                });
+            }
+        })
+        .catch(() => {
+            toast.error('Failed to send survey', {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 2500,
+            });
+        });
 }
 
 const validateAllData = (): boolean => {
@@ -66,7 +80,7 @@ const validateAllData = (): boolean => {
     let isValid = true
     for (const h of surveyQuestionsHandles) {
         if (!h.valid()) {
-            isValid = false
+            isValid = false;
         }
     }
 
@@ -115,7 +129,7 @@ const validateAllData = (): boolean => {
                         </template>
                         <div class="flex justify-end mt-4">
                             <Btn variant="primary" @click="send()">
-                                Send survey
+                                Send survey {{ isReadyToSave }}
                             </Btn>
                             
                         </div>
