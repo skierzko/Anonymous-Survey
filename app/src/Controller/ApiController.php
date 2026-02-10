@@ -45,7 +45,7 @@ class ApiController extends AbstractController
             $surveys,
             status: 200,
             headers: [],
-            context: ['groups' => ['user:read']]
+            context: ['groups' => ['user:read', 'user:results']]
         );
     }
 

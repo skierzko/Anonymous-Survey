@@ -2,7 +2,7 @@
 import { Survey } from '../models/Survey';
 import Pill from '../../components/Pill.vue';
 import OnlineDot from '../../components/OnlineDot.vue';
-import { ChevronRight, Key, ListTree, Pencil, Globe } from 'lucide-vue-next';
+import { ChevronRight, Key, ListTree, Pencil, Globe, MessagesSquare } from 'lucide-vue-next';
 import dayjs from 'dayjs';
 import Btn from '../../components/Btn.vue';
 
@@ -23,6 +23,12 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
                         <RouterLink :to="'/survey/' + survey.id">
                             <span class="hover:font-bold">{{ survey.title }}</span>
                         </RouterLink>
+                    </Pill>
+                </div>
+                <div>
+                    <Pill variant="success" title="Number of responses">
+                        <MessagesSquare :size="18" class="mr-1"  />
+                        {{ survey.results.length }}
                     </Pill>
                 </div>
                 <div>
