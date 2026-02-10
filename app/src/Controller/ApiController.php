@@ -46,7 +46,7 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/survey/{id}', name: 'survey', methods: ['GET'])]
+    #[Route('/survey/{id}', name: 'survey', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function surveysByUserAndId(
         #[CurrentUser] ?User $user,
         SurveyRepository $surveyRepository,
@@ -66,7 +66,7 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/survey/slug/{slug}', name: 'survey_by_slug', methods: ['GET'])]
+    #[Route('/survey/slug/{slug}', name: 'survey_by_slug', methods: ['GET'], requirements: ['slug' => '.{20,32}'])]
     public function surveysByUserAndSlug(
         #[CurrentUser] ?User $user,
         SurveyRepository $surveyRepository,
@@ -111,7 +111,7 @@ class ApiController extends AbstractController
         );
     }
 
-    #[Route('/survey/{id}', name: 'delete', methods: ['DELETE'])]
+    #[Route('/survey/{id}', name: 'delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     public function deleteSurvey(
         #[CurrentUser]
         ?User $user,
@@ -141,6 +141,17 @@ class ApiController extends AbstractController
         $em->persist($survey);
         $em->flush();
 
+        return $this->json([
+            'success' => true
+        ]);
+    }
+
+    #[Route('/survey/show/{slug}', name: 'survey_show', methods: ['POST'], requirements: ['slug' => '.{20,32}'])]
+    public function saveSurveyResult(
+        string $slug,
+    ): JsonResponse
+    {
+        dd('save result', $slug);
         return $this->json([
             'success' => true
         ]);
