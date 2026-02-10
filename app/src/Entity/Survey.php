@@ -53,6 +53,14 @@ class Survey
     #[Groups(['user:read', 'user:show'])]
     private Collection $questions;
 
+    #[ORM\OneToMany(
+        mappedBy: 'survey',
+        targetEntity: SurveyResult::class,
+        orphanRemoval: true
+    )]
+    #[Groups(['user:results'])]
+    private Collection $results;
+
     #[ORM\Column(type: Types::JSON)]
     #[Groups(['user:read'])]
     private array $extraOptions = [];
@@ -80,6 +88,7 @@ class Survey
     public function __construct()
     {
         $this->questions = new ArrayCollection();
+        $this->results = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -179,6 +188,23 @@ class Survey
     {
         if (!$this->questions->contains($question)) {
             $this->questions->add($question);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SurveyResult>
+     */
+    public function getResults(): Collection
+    {
+        return $this->results;
+    }
+
+    public function addResult(SurveyResult $result): self
+    {
+        if (!$this->results->contains($result)) {
+            $this->results->add($result);
         }
 
         return $this;
