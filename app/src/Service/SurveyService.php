@@ -34,6 +34,7 @@ class SurveyService
 
     private function saveSurveyData(CreateSurveyDto $dto, EntityManagerInterface $em): Survey
     {
+        /** @var Survey|null $survey */
         $survey = null;
         if (!empty($dto->id)) {
             $survey = $em->getRepository(Survey::class)->find($dto->id);
@@ -51,6 +52,10 @@ class SurveyService
             ->setPassword($dto->password)
             ->setExtraOptions($dto->extraOptions)
             ->setIsPublic($dto->isPublic);
+
+        if ($dto->isPublic && $survey->getPublicAt() === null) {
+            $survey->setPublicAt($this->now);
+        }
 
         $this->saveSurveyQuestionsData($survey, $dto);
 

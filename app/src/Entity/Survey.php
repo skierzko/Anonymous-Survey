@@ -71,7 +71,7 @@ class Survey
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     #[Groups(['user:read'])]
-    private \DateTimeImmutable $publicAt;
+    private ?\DateTimeImmutable $publicAt = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Groups(['user:read'])]
@@ -232,12 +232,12 @@ class Survey
         return $this;
     }
 
-    public function getPublicAt(): \DateTimeImmutable
+    public function getPublicAt(): ?\DateTimeImmutable
     {
         return $this->publicAt;
     }
 
-    public function setPublicAt(\DateTimeImmutable $publicAt): self
+    public function setPublicAt(?\DateTimeImmutable $publicAt): self
     {
         $this->publicAt = $publicAt;
         return $this;
