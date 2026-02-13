@@ -14,8 +14,9 @@ A simple survey application built with Symfony 8, Vue 3, and TypeScript. The app
 - User registration and authentication
 - Create and manage surveys
 - Duplicate existing surveys
-- Public or password-protected access for surveys
+- Public or password-protected access for surveys (not yet implemented)
 - Anonymous choice-based surveys
+- Preview of survey responses 
 
 ## Instalation
 
