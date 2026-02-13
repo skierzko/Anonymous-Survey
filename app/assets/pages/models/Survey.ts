@@ -1,4 +1,5 @@
 import { SurveyQuestion } from "./SurveyQuestion";
+import { SurveyResult } from "./SurveyResult";
 
 export interface Survey {
     id?: number,
@@ -12,6 +13,7 @@ export interface Survey {
     questions?: SurveyQuestion[],
     extraOptions: Record<string, boolean | string | number>,
     isPublic: boolean,
+    results: SurveyResult[],
     
     publicAt: string,
     createdAt: string,
