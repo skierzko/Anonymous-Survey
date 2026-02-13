@@ -18,7 +18,10 @@
     {% if app_env == 'dev' %}
         <script type="module" src="http://localhost:5173/build/main.ts"></script>
     {% else %}
-        <script type="module" src="{{ asset('build/main.js') }}"></script>
+        <script type="module" src="{{ vite_asset.asset('main.ts') }}"></script>
+        {% for cssFile in vite_asset.css('main.ts') %}
+            <link rel="stylesheet" href="{{ '/build/' ~ cssFile }}">
+        {% endfor %}
     {% endif %}
 </body>
 </html>
