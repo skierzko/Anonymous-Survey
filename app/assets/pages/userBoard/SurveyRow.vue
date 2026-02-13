@@ -37,7 +37,7 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
                             <Btn class="p-0! m-0!" variant="ghost" @click="showModal()">
                                 <Pill variant="success" title="Number of responses">
                                     <MessagesSquare :size="18" class="mr-1"  />
-                                    {{ survey.results.length }}
+                                    {{ survey?.results?.length ?? 0 }}
                                 </Pill>
                             </Btn>
                         </template>
