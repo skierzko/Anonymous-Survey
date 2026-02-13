@@ -18,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
 class SurveyService
 {
     private \DateTimeImmutable $now;
-    private User $user;
+    private ?User $user;
 
     public function __construct(
         private Security $security,
