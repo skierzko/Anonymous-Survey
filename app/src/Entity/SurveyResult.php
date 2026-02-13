@@ -21,9 +21,9 @@ class SurveyResult
     #[ORM\JoinColumn(nullable: false)]
     private ?Survey $survey = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::JSON)]
     #[Groups(['user:read'])]
-    private string $results;
+    private array $results;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     #[Groups(['user:read'])]
@@ -61,12 +61,12 @@ class SurveyResult
         return $this;
     }
 
-    public function getResults(): string
+    public function getResults(): array
     {
         return $this->results;
     }
 
-    public function setResults(string $results): self
+    public function setResults(array $results): self
     {
         $this->results = $results;
         return $this;
