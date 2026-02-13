@@ -15,9 +15,13 @@ const props = defineProps<{
                 <h1 class="p-2 leading-10 text-4xl sm:leading-14">Create surveys and share them anonymously for completion</h1>
                 <p class="mb-4 p-4">Join the people who are already creating their anonymous surveys.</p>
 
-                <a href="#" class="inline-block bg-white text-black mb-6 px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition duration-300">
+                <RouterLink
+                    to="/login"
+                    class="inline-block bg-white text-black mb-6 px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition duration-300"
+                >
                     Let's start! 🚀
-                </a>
+                </RouterLink>
+
             </div>
         </template>
         <template v-slot:default>
@@ -52,18 +56,27 @@ const props = defineProps<{
             <section class="p-6 py-20 border-t-2 bg-white">
                 <h2 class="mb-8 text-3xl">View sample surveys</h2>
                 <div>
-                    <div class="p-6 bg-gray-100 rounded-sm shadow-sm hover:shadow-md transition duration-300 mb-4">
-                        <h3 class="text-xl mb-2">Sample Survey 1</h3>
-                        <p class="text-gray-700 mb-2">This is a placeholder for a sample survey description.</p>
-                    </div>
-                    <div class="p-6 bg-gray-100 rounded-sm shadow-sm hover:shadow-md transition duration-300 mb-4">
-                        <h3 class="text-xl mb-2">Sample Survey 2</h3>
-                        <p class="text-gray-700 mb-2">This is a placeholder for a sample survey description.</p>
-                    </div>
-                    <div class="p-6 bg-gray-100 rounded-sm shadow-sm hover:shadow-md transition duration-300 mb-4">
-                        <h3 class="text-xl mb-2">Sample Survey 3</h3>
-                        <p class="text-gray-700 mb-2">This is a placeholder for a sample survey description.</p>
-                    </div>
+                    <RouterLink to="/survey/show/01khbj4dd6r0kpcv42dy28ec74">
+                        <div class="p-6 bg-gray-100 rounded-sm shadow-sm hover:shadow-md transition duration-300 mb-4">
+                            <h3 class="text-xl mb-2">Survey about games</h3>
+                            <p class="text-gray-700 mb-2">This survey gathers insights into participants’ opinions, preferences, and experiences related specifically to this game-focused questionnaire.</p>
+                        </div>
+                    </RouterLink>
+                    
+                    <RouterLink to="/survey/show/01khbks4zf8hmyxfy0gfjrav2q">
+                        <div class="p-6 bg-gray-100 rounded-sm shadow-sm hover:shadow-md transition duration-300 mb-4">
+                            <h3 class="text-xl mb-2">Survey about movies</h3>
+                            <p class="text-gray-700 mb-2">This survey collects participants’ opinions, preferences, and viewing experiences related to movies.</p>
+                        </div>
+                    </RouterLink>
+
+                    <RouterLink to="/survey/show/01khbbnzx7p9vnf7eedwdwve0f">
+                        <div class="p-6 bg-gray-100 rounded-sm shadow-sm hover:shadow-md transition duration-300 mb-4">
+                            <h3 class="text-xl mb-2">Survey about programming</h3>
+                            <p class="text-gray-700 mb-2">This survey explores participants’ programming experience, preferred technologies, and development practices.</p>
+                        </div> 
+                    </RouterLink>
+                    
                 </div>
             </section>
         </template>
