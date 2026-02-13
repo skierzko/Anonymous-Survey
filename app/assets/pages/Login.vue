@@ -5,6 +5,8 @@ import NoLoginLayout from './layout/NoLoginLayout.vue';
 import { User } from '../types/User';
 import { useRouter } from 'vue-router'
 import { login as loginService } from "../pages/services/login";
+import NotifyBar from '../components/NotifyBar.vue';
+import Pill from '../components/Pill.vue';
 
 
 const props = defineProps<{
@@ -22,6 +24,7 @@ const form = reactive<LoginForm>({
     password: '',
 });
 
+const testMode = ref<boolean>(true);
 const sending = ref<boolean>(false);
 const successful = ref<boolean>(false);
 const errors = ref<[]>([]);
@@ -86,6 +89,21 @@ const login = async (): Promise<void> => {
                         <p>You will be redirected to your user page shortly.</p>
                     </div>
                     <form v-else class="max-w-md mx-auto">
+                        <div class="mb-4">
+                            <NotifyBar v-if="testMode" variant="default" class="block!">
+                                A demo mode is available, and you can log in using the credentials provided below.
+                                <div class="grid grid-cols-[80px_1fr] mt-4">
+                                    <p class="font-bold">Email:</p>
+                                    <p class="cursor-pointer" @click="form.email = 'admin@localhost.test'">admin@localhost.test</p>
+                                    <p class="font-bold">Password:</p>
+                                    <p class="cursor-pointer" @click="form.password = 'password_admin'">password_admin</p>
+                                </div>
+                            </NotifyBar>
+
+                            <NotifyBar v-if="testMode" variant="danger" class="block! mt-4">
+                                The database is refreshed every <b>30 minutes</b>, and all entered data will be permanently lost.
+                            </NotifyBar>
+                        </div>
                         <div class="mb-4">
                             <label for="email" class="block text-gray-700 mb-2">Email:</label>
                             <input v-model="form.email" type="email" id="email" class="w-full px-3 py-2 border rounded" required>

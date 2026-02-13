@@ -4,6 +4,7 @@ import Btn from '../components/Btn.vue';
 import NoLoginLayout from './layout/NoLoginLayout.vue';
 import { User } from '../types/User';
 import { register as registerService } from "../pages/services/register";
+import NotifyBar from '../components/NotifyBar.vue';
 
 const props = defineProps<{
     csrfToken: string,
@@ -24,12 +25,13 @@ const form = reactive<RegisterForm>({
     agree_terms: false,
 });
 
+const testMode = ref<boolean>(true);
 const sending = ref<boolean>(false);
 const successful = ref<boolean>(false);
 const errors = ref<[]>([]);
 
 const register = async () => {
-    if (sending.value) {
+    if (sending.value || testMode.value) {
         return;
     }
 
@@ -41,7 +43,7 @@ const register = async () => {
     data.append('registration_form[plainPassword][first]', form.password)
     data.append('registration_form[plainPassword][second]', form.confirmPassword)
     data.append('registration_form[agreeTerms]', form.agree_terms ? 'true' : 'false')
-    data.append('registration_form[_token]', document.querySelector('[csrftoken]')?.getAttribute('csrftoken') ?? '')
+    data.append('registration_form[_token]', props.csrfToken ?? '')
 
     await registerService.post('', data)
     .then((response) => {
@@ -86,21 +88,26 @@ const register = async () => {
                     </div>
                     <form v-else class="max-w-md mx-auto">
                         <div class="mb-4">
+                            <NotifyBar v-if="testMode" variant="danger">
+                                Registration is temporarily disabled for testing purposes.
+                            </NotifyBar>
+                        </div>
+                        <div class="mb-4">
                             <label for="email" class="block text-gray-700 mb-2">Email:</label>
-                            <input v-model="form.email" type="email" id="email" class="w-full px-3 py-2 border rounded" required>
+                            <input v-model="form.email" :disabled="testMode" type="email" id="email" class="w-full px-3 py-2 border rounded" required>
                             <div v-if="errors.email" class="text-red-700 text-sm">{{ errors.email }}</div>
                         </div>
                         <div class="mb-6">
                             <label for="password" class="block text-gray-700 mb-2">Password:</label>
-                            <input v-model="form.password" type="password" id="password" class="w-full px-3 py-2 border rounded" required>
+                            <input v-model="form.password" :disabled="testMode" type="password" id="password" class="w-full px-3 py-2 border rounded" required>
                             <div v-if="errors.first" class="text-red-700 text-sm">{{ errors.first }}</div>
                         </div>
                         <div class="mb-6">
                             <label for="confirm-password" class="block text-gray-700 mb-2">Confirm Password:</label>
-                            <input v-model="form.confirmPassword" type="password" id="confirm-password" class="w-full px-3 py-2 border rounded" required>
+                            <input v-model="form.confirmPassword" :disabled="testMode" type="password" id="confirm-password" class="w-full px-3 py-2 border rounded" required>
                             <div v-if="errors.second" class="text-red-700 text-sm">{{ errors.second }}</div>
                         </div>
-                        <Btn variant="primary" @click="register">
+                        <Btn :disabled="testMode" variant="primary" @click="register">
                             {{ sending ? 'Sending...' : 'Register' }}
                         </Btn>
                     </form>
