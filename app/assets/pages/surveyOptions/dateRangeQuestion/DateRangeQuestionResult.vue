@@ -1,0 +1,54 @@
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { SurveyQuestion } from '../../models/SurveyQuestion';
+import { Answer, SurveyResult } from '../../models/SurveyResult';
+import NotifyBar from '../../../components/NotifyBar.vue';
+import Pill from '../../../components/Pill.vue';
+
+const props = defineProps<{
+    question: SurveyQuestion,
+    results: SurveyResult[],
+    currentResultId: number | null,
+}>()
+
+const isSingleDate = props.question.extraOptions?.viewSingleDate;
+const surveyResult = ref<SurveyResult|null>(null);
+const answerResult = ref<Answer|null>(null);
+watch(() => props.currentResultId, () => {
+    const resultsFiltered = props.results.filter(item => {
+        return item.id === props.currentResultId;
+    });
+
+    if (resultsFiltered.length === 0) {
+        surveyResult.value = null;
+        answerResult.value = null;
+        return;
+    }
+    surveyResult.value = resultsFiltered.length ? resultsFiltered[0] : null;
+    
+    const answerFiltered = surveyResult.value?.results.answers.filter(item => {
+        return item.uuid === props.question.uuid;
+    })
+    answerResult.value = answerFiltered?.length ? answerFiltered[0] : null;
+})
+</script>
+
+<template>
+    <div class="bg-gray-100 rounded-sm">
+        <div class="bg-gray-200 p-2">
+            {{ question.title }}
+        </div>
+
+        <div class="p-2">
+            <div v-if="answerResult?.value" class="grid grid-cols-[auto_2fr] gap-2 justify-start ml-4">
+                <Pill variant="light" class="mr-2">{{ isSingleDate ? 'Date:' : 'From:' }}</Pill>
+                <div>{{ answerResult?.value.dateStart }}</div>
+                <Pill v-if="isSingleDate === false" variant="light" class="mr-2">To:</Pill>
+                <div v-if="isSingleDate === false">{{ answerResult?.value.dateEnd }}</div>
+            </div>
+            <NotifyBar v-else>
+                Select one of the available surveys from the list
+            </NotifyBar>
+        </div>
+    </div>
+</template>
