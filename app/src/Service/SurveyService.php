@@ -163,10 +163,11 @@ class SurveyService
         ): void
     {
         $jsonRequestData = $serializer->serialize($results, 'json');
+        $arrayRequestData = json_decode($jsonRequestData, true);
         
 
         $surveyResult = new SurveyResult();
-        $surveyResult->setResults($jsonRequestData)
+        $surveyResult->setResults($arrayRequestData)
             ->setSurvey($survey)
             ->setCreatedAt($this->now)
             ->setUpdatedAt($this->now)
