@@ -90,7 +90,7 @@ onMounted(() => {
                                 :name="option.uuid + index"
                                 :value="index + 1"
                                 v-model="currentOptions[option.uuid]"
-                                /> <label    console.log(startDateAfterEndDate); :for="option.uuid + index" class="ml-2 cursor-pointer" >{{ n }}</label>
+                                /> <label :for="option.uuid + index" class="ml-2 cursor-pointer" >{{ n }}</label>
                         </div>
                     </template>
                 </div>

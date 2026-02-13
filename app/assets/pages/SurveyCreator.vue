@@ -316,7 +316,7 @@ const linkToSurvey = () => {
                                     {{ dayjs(survey.publicAt).format('YYYY-MM-DD HH:mm') }}
                                 </p>
 
-                                <Confirm v-if="props.id"class="w-full">
+                                <Confirm v-if="props.id" class="w-full">
                                     <template #default="{ showConfirm }">
                                         <div class="flex justify-center">
                                             <Btn

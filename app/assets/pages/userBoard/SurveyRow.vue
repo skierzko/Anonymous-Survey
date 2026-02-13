@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { Survey } from '../models/Survey';
 import Pill from '../../components/Pill.vue';
 import OnlineDot from '../../components/OnlineDot.vue';
 import { ChevronRight, Key, ListTree, Pencil, Globe, MessagesSquare } from 'lucide-vue-next';
 import dayjs from 'dayjs';
 import Btn from '../../components/Btn.vue';
+import Modal from '../../components/Modal.vue';
+import SurveyResultQuestions from './surveyResults/SurveyResultQuestions.vue';
 
 const props = defineProps<{ survey: Survey }>();
 
@@ -26,10 +29,22 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
                     </Pill>
                 </div>
                 <div>
-                    <Pill variant="success" title="Number of responses">
-                        <MessagesSquare :size="18" class="mr-1"  />
-                        {{ survey.results.length }}
-                    </Pill>
+                    <Modal>
+                        <template #title>
+                            <h3 class="text-lg font-bold">Survey Results</h3>
+                        </template>
+                        <template #default="{ showModal }">
+                            <Btn class="p-0! m-0!" variant="ghost" @click="showModal()">
+                                <Pill variant="success" title="Number of responses">
+                                    <MessagesSquare :size="18" class="mr-1"  />
+                                    {{ survey.results.length }}
+                                </Pill>
+                            </Btn>
+                        </template>
+                        <template #modal="{ hideModal }">
+                            <SurveyResultQuestions :survey="survey" />
+                        </template>
+                    </Modal>
                 </div>
                 <div>
                     <Pill>
