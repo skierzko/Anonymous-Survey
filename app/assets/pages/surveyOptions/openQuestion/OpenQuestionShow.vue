@@ -69,7 +69,8 @@ onMounted(() => {
         </Pill>
         <div class="grid gap-2 p-2 select-none">
             {{ question.title }}
-            <InputTextarea v-model="text" placeholder="Write your answer here..."></InputTextarea>
+            <InputTextarea v-model="text" :maxlength="question.maxOptionsLimit" placeholder="Write your answer here..."></InputTextarea>
+            <Pill>Signs: {{ text.length }}</Pill>
         </div>
         <div v-if="error" class="text-red-700 col-span-2 text-sm ml-6">
             {{ error }}

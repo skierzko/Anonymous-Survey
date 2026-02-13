@@ -10,11 +10,13 @@ interface Props {
     disabled?: boolean;
     cols?: number;
     rows?: number;
+    maxlength?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
     cols: 10,
     rows: 4,
+    maxlength: 6000
 });
 
 const emit = defineEmits<{
@@ -47,6 +49,7 @@ function onInput(event: Event) {
             :disabled="disabled"
             :cols="cols"
             :rows="rows"
+            :maxlength="maxlength"
             @input="onInput"
             class="
                 w-full rounded-lg border px-3 py-2 text-sm bg-white
