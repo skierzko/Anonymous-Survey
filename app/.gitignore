@@ -19,3 +19,7 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+
+# Vite build output
+/public/build/
+public/build/.vite/manifest.json
