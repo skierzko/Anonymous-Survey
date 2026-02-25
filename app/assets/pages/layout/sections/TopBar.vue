@@ -22,14 +22,13 @@ const logout =  async () => {
 </script>
 
 <template>
-    <section class="p-2 flex items-center">
+    <section class="p-2 sm:flex items-center">
         <div class="flex-1 text-xl">
-            
             <RouterLink to="/">
                 <Btn variant="text">Anonymous Survey</Btn>
             </RouterLink>
         </div>
-        <div class="grid grid-cols-2 gap-1">
+        <div class="flex justify-end sm:grid grid-cols-2 gap-1">
             <template v-if="isLogged">
                 <RouterLink to="/user-board">
                     <Btn>
@@ -52,7 +51,7 @@ const logout =  async () => {
                 </RouterLink>
 
                 <RouterLink to="/register">
-                    <Btn>
+                    <Btn class="flex">
                         Register
                         <Form :size="22" :stroke-width="1.3" class="inline-block" />
                     </Btn>

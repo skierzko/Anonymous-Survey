@@ -20,7 +20,7 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
         :class="[survey.isPublic && 'border-b-2 border-green-600']"
     >
         <div class="flex-1">
-            <div class="flex">
+            <div class="sm:flex">
                 <div class="flex-1">
                     <Pill>
                         <RouterLink :to="'/survey/' + survey.id">
@@ -28,52 +28,53 @@ const publicAt = props.survey.publicAt ? dayjs(props.survey.publicAt).format('YY
                         </RouterLink>
                     </Pill>
                 </div>
-                <div>
-                    <Modal>
-                        <template #title>
-                            <h3 class="text-lg font-bold">Survey Results</h3>
-                        </template>
-                        <template #default="{ showModal }">
-                            <Btn class="p-0! m-0!" variant="ghost" @click="showModal()">
-                                <Pill variant="success" title="Number of responses">
-                                    <MessagesSquare :size="18" class="mr-1"  />
-                                    {{ survey?.results?.length ?? 0 }}
-                                </Pill>
-                            </Btn>
-                        </template>
-                        <template #modal="{ hideModal }">
-                            <SurveyResultQuestions :survey="survey" />
-                        </template>
-                    </Modal>
+                <div class="flex mt-2 sm:mt-0">
+                    <div>
+                        <Modal>
+                            <template #title>
+                                <h3 class="text-lg font-bold">Survey Results</h3>
+                            </template>
+                            <template #default="{ showModal }">
+                                <Btn class="p-0! m-0!" variant="ghost" @click="showModal()">
+                                    <Pill variant="success" title="Number of responses">
+                                        <MessagesSquare :size="18" class="mr-1"  />
+                                        {{ survey?.results?.length ?? 0 }}
+                                    </Pill>
+                                </Btn>
+                            </template>
+                            <template #modal="{ hideModal }">
+                                <SurveyResultQuestions :survey="survey" />
+                            </template>
+                        </Modal>
+                    </div>
+                    <div>
+                        <Pill>
+                            <Pencil v-if="survey.draft" :size="18" class="mr-1"  />
+                            <Globe v-else :size="18" class="mr-1"  />
+                            {{ survey.draft  ? 'DRAFT' : 'READY' }}
+                        </Pill>
+                    </div>
+                    <div>
+                        <Pill>
+                            <Key :size="18" class="mr-1" />
+                            {{ survey.passwordRequired  ? 'ON' : 'OFF' }}
+                        </Pill>
+                    </div>
+                    <div>
+                        <Pill>
+                            <ListTree :size="18" class="mr-1"  />
+                            {{ survey.questions.length }}
+                        </Pill>
+                    </div>
                 </div>
-                <div>
-                    <Pill>
-                        <Pencil v-if="survey.draft" :size="18" class="mr-1"  />
-                        <Globe v-else :size="18" class="mr-1"  />
-                        {{ survey.draft  ? 'DRAFT' : 'READY' }}
-                    </Pill>
-                </div>
-                <div>
-                    <Pill>
-                        <Key :size="18" class="mr-1" />
-                        {{ survey.passwordRequired  ? 'ON' : 'OFF' }}
-                    </Pill>
-                </div>
-                <div>
-                    <Pill>
-                        <ListTree :size="18" class="mr-1"  />
-                        {{ survey.questions.length }}
-                    </Pill>
-                </div>
-                <div></div>
             </div>
-            <div class="flex items-center">
-                <div class="flex-1 pl-3 text-xs text-gray-600">
+            <div class="pl-2 mt-2 sm:mt-0 sm:pl-0 sm:flex items-center">
+                <div class="flex-1 sm:pl-3 text-xs text-gray-600">
                     <b>Slug: </b>
                     {{ survey.slug }}
                 </div>
-                <OnlineDot :offline="survey.isPublic === false" />
-                <div class="px-1 text-xs text-gray-600" :class="[! survey.publicAt && 'opacity-50']">
+                <OnlineDot :offline="survey.isPublic === false" class="hidden! sm:inline-block" />
+                <div class="sm:px-1 text-xs text-gray-600" :class="[! survey.publicAt && 'opacity-50']">
                     <b>Public at: </b>
                     {{ publicAt ?? 'unpublished'}}
                 </div>

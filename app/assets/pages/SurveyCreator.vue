@@ -357,18 +357,27 @@ const linkToSurvey = () => {
                     <div class="flex-1 mt-16 md:mt-0">
                         <div class="text-xl mb-4">Survey questions</div>
 
-                        <NotifyBar v-if="survey.isPublic && survey.id" class="mb-4">
+                        <NotifyBar
+                            v-if="survey.isPublic && survey.id"
+                            class="mb-4"
+                        >
                             <template #icon>
                                 <ExternalLink />
                             </template>
                             <template #default>
-                                Your survey link:
-                                <RouterLink
-                                    :to="`/survey/show/${survey.slug}`"
-                                    class="ml-1 text-blue-600 underline"
-                                > 
-                                    {{ linkToSurvey() }}
-                                </RouterLink>
+                                <div class="">
+                                    <span>Your survey link:</span>
+                                    <span class="break-all">
+                                        <RouterLink
+                                            :to="`/survey/show/${survey.slug}`"
+                                            class="ml-1 text-blue-600 underline"
+                                        > 
+                                            {{ linkToSurvey() }}
+                                        </RouterLink>
+                                    </span>
+                                    
+                                </div>
+                                
                             </template>
                         </NotifyBar>
 
