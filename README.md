@@ -2,6 +2,14 @@
 
 Anonymous Survey is an advanced application built with Symfony 8, Vue 3, and TypeScript. The app allows users to register, create surveys, duplicate them, and make them public. Choice-based surveys are always anonymous, but access can be public or protected with a password.
 
+## 🚀 Live Demo
+
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://anonymous-survey.kierzkowski.net)
+
+## 🌐 Portfolio
+
+[![Portfolio](https://img.shields.io/badge/Visit-My_Portfolio-111?style=for-the-badge&logo=github&logoColor=white)](https://kierzkowski.net)
+
 ## Table of Contents
 
 - [Features](#features)
